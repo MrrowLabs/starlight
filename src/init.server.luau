@@ -34,6 +34,7 @@ local assetIndicies: Fusion.Value<types.AssetIndicies> =
 
 if plugin:GetSetting("AssetIndicies") == nil then
 	-- most likely a first install
+	print("installing default starlight repo...")
 	assetRegistry.importAssetRepoFromUri(
 		assetIndicies,
 		"https://raw.githubusercontent.com/MrrowLabs/starlight/refs/heads/master/starlight.repo.json"
