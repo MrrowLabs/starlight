@@ -1,0 +1,12 @@
+{
+  "name": "starlight",
+  "tree": {
+    "$path": "src",
+    "packages": {
+      "$path": "roblox_packages"
+    },
+    "pesde": {
+      "$path": "pesde.toml"
+    }
+  }
+}

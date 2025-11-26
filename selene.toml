@@ -1,0 +1,6 @@
+std = "roblox+luau"
+exclude = ["roblox_packages/*", "lune_packages/*", ".pesde/*"]
+
+[lints]
+shadowing = "allow"
+mixed_table = "allow"
