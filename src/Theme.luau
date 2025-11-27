@@ -77,20 +77,20 @@ local themePalettes: ThemePalettes = {
 
 	-- TODO: actually get light mode colors
 	light = {
-		bg_dark = Color3.fromHex("#040208"),
-		bg = Color3.fromHex("#0c0912"),
-		bg_light = Color3.fromHex("#17141e"),
-		text = Color3.fromHex("#f6ecff"),
-		text_muted = Color3.fromHex("#b5acc7"),
-		highlight = Color3.fromHex("#665e77"),
-		border = Color3.fromHex("#4b435a"),
-		border_muted = Color3.fromHex("#31293f"),
-		primary = Color3.fromHex("#bba3e8"),
-		secondary = Color3.fromHex("#a9bb71"), -- TODO: replace color
-		danger = Color3.fromHex("#bc938c"),
-		warning = Color3.fromHex("#a5a07c"),
-		success = Color3.fromHex("#84a894"),
-		info = Color3.fromHex("#8d9fbe"),
+		bg_dark = Color3.fromHex("#e6e2f0"),
+		bg = Color3.fromHex("#f4effe"),
+		bg_light = Color3.fromHex("#fffcff"),
+		text = Color3.fromHex("#0e0719"),
+		text_muted = Color3.fromHex("#4b435a"),
+		highlight = Color3.fromHex("#fffaff"),
+		border = Color3.fromHex("#847b95"),
+		border_muted = Color3.fromHex("#a299b4"),
+		primary = Color3.fromHex("#503975"),
+		secondary = Color3.fromHex("#414f00"), -- TODO: replace color
+		danger = Color3.fromHex("#7d5952"),
+		warning = Color3.fromHex("#6a6443"),
+		success = Color3.fromHex("#4a6c59"),
+		info = Color3.fromHex("#536480"),
 	},
 }
 
@@ -101,7 +101,7 @@ local function Theme(scope: Fusion.Scope<typeof(Fusion)>): ThemeContext
 	table.insert(
 		scope,
 		studio.ThemeChanged:Connect(function()
-			scope:Value(studio.Theme.Name:lower())
+			studioTheme:set(studio.Theme.Name:lower())
 		end)
 	)
 
