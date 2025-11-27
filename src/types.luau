@@ -34,9 +34,16 @@ export type TextureAssetProps = {
 
 export type TextureAsset = BaseAsset<"texture", TextureAssetProps>
 
-export type AssetProps = TextureAssetProps
+export type ScriptAssetProps = {
+	scriptType: "server" | "client",
+	source: string,
+}
 
-export type Asset = TextureAsset
+export type ScriptAsset = BaseAsset<"script", ScriptAssetProps>
+
+export type AssetProps = TextureAssetProps | ScriptAssetProps
+
+export type Asset = TextureAsset | ScriptAsset
 
 export type AssetRepo = {
 	uid: string,
@@ -51,16 +58,6 @@ export type AssetRepo = {
 	readonly: boolean,
 }
 
-export type AssetRepoExport = {
-	uid: string,
-	name: string,
-	description: string,
-	thumbnailUri: string?,
-	credits: string,
-	version: string,
-	assets: { [string]: Asset },
-}
-
 export type AssetIndicies = {
 	-- in the form of uid: Asset object
 	-- also the more internal index
@@ -69,6 +66,25 @@ export type AssetIndicies = {
 	assetTags: { [string]: Set<string> },
 	assetRepos: { [string]: AssetRepo },
 	favorites: Set<string>,
+}
+
+export type AssetExport = {
+	type: string,
+	uid: string,
+	name: string,
+	credits: string,
+	tags: { string },
+	inner: any,
+}
+
+export type AssetRepoExport = {
+	uid: string,
+	name: string,
+	description: string,
+	thumbnailUri: string?,
+	credits: string,
+	version: string,
+	assets: { AssetExport },
 }
 
 return {}

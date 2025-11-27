@@ -100,7 +100,7 @@ function assetRegistry.addAsset(
 		credits = metadata.credits,
 		tags = {},
 		inner = props,
-	}
+	} :: types.BaseAsset
 	peek(assetIndicies).assetUids[uid] = uid
 	assetIndicies:set(peek(assetIndicies))
 end
@@ -234,6 +234,22 @@ function assetRegistry.deleteAssetRepo(assetIndicies: Fusion.Value<types.AssetIn
 	assetIndicies:set(peek(assetIndicies))
 end
 
+function assetRegistry.exportAsset(
+	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetUid: string
+): types.AssetExport
+	local asset = assetRegistry.getAsset(assetIndicies, assetUid)
+	assert(asset, `unknown asset {assetUid}`)
+	return {
+		type = asset.type,
+		uid = asset.uid,
+		name = asset.name,
+		credits = asset.credits,
+		tags = values(asset.tags),
+		inner = asset.inner,
+	}
+end
+
 function assetRegistry.exportAssetRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, assetRepoUid: string): string
 	local assetRepo = assetRegistry.getAssetRepo(assetIndicies, assetRepoUid)
 	assert(assetRepo, `asset repo {assetRepoUid} does not exist`)
@@ -251,7 +267,7 @@ function assetRegistry.exportAssetRepo(assetIndicies: Fusion.Value<types.AssetIn
 	for _, assetUid in assetRepo.assetUids do
 		local asset = assetRegistry.getAsset(assetIndicies, assetUid)
 		assert(asset, `asset {assetUid} does not exist`)
-		assetRepoExport.assets[assetUid] = asset
+		table.insert(assetRepoExport.assets, assetRegistry.exportAsset(assetIndicies, assetUid))
 	end
 
 	return HttpService:JSONEncode(assetRepoExport)
@@ -286,14 +302,14 @@ function assetRegistry.importAssetRepo(
 		readonly = false,
 	})
 
-	for uid, asset: types.BaseAsset in assetRepoExport.assets do
-		assetRegistry.addAsset(assetIndicies, uid, {
-			type = asset.type,
+	for _, asset in assetRepoExport.assets do
+		assetRegistry.addAsset(assetIndicies, asset.uid, {
+			type = asset.type :: any,
 			credits = asset.credits,
 			name = asset.name,
 		}, asset.inner)
-		assetRegistry.addTags(assetIndicies, uid, table.unpack(values(asset.tags)))
-		assetRegistry.addAssetToAssetRepo(assetIndicies, uid, assetRepoExport.uid)
+		assetRegistry.addTags(assetIndicies, asset.uid, table.unpack(values(asset.tags)))
+		assetRegistry.addAssetToAssetRepo(assetIndicies, asset.uid, assetRepoExport.uid)
 	end
 
 	local assetRepo = assetRegistry.getAssetRepo(assetIndicies, assetRepoExport.uid)
