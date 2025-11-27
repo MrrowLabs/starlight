@@ -70,7 +70,7 @@ local function EditAssetForm(scope: Fusion.Scope<typeof(Fusion)>, props: EditAss
 				title = "Tags",
 				description = "Add any tags to describe/seperate your asset. <i>Use spaces to seperate each tag</i>",
 				input = rawTags,
-				placeholder = "my, really, cool, asset",
+				placeholder = "my really cool asset",
 			},
 
 			scope:TagsRender {
