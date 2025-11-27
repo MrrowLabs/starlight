@@ -14,7 +14,7 @@ local Child = Fusion.Child
 
 type ModalsProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	rawSelection: Fusion.Value<{ Instance }>,
 	selection: Fusion.Computed<{ Instance }>,
 	selectedAsset: Fusion.Value<types.Asset?>,
@@ -48,7 +48,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 				return if use(props.createRepoModalOpen)
 					then scope:CreateRepoModal {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						createRepoModalOpen = props.createRepoModalOpen,
 					}
 					else nil
@@ -59,7 +59,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 				return if use(props.editRepoModalOpen) and selectedAssetRepo
 					then scope:EditRepoModal {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						selectedAssetRepo = selectedAssetRepo,
 						selectedAssetRepoValue = props.selectedAssetRepo,
 						editRepoModalOpen = props.editRepoModalOpen,
@@ -72,7 +72,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 				return if use(props.exportRepoModalOpen) and selectedAssetRepo
 					then scope:ExportRepoModal {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						assetRepo = selectedAssetRepo,
 						exportAssetRepoModalOpen = props.exportRepoModalOpen,
 					}
@@ -83,7 +83,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 				return if use(props.importRepoModalOpen)
 					then scope:ImportRepoModal {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						selectedAssetRepo = props.selectedAssetRepo,
 						importAssetRepoModalOpen = props.importRepoModalOpen,
 					}
@@ -94,7 +94,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 				return if use(props.addAssetModalOpen)
 					then scope:AddAssetModal {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						selection = props.selection,
 						selectedAssetRepo = props.selectedAssetRepo,
 						addAssetModalOpen = props.addAssetModalOpen,
@@ -108,7 +108,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 				return if selectedAsset and use(props.editAssetModalOpen)
 					then scope:EditAssetModal {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						asset = selectedAsset,
 						selectedAsset = props.selectedAsset,
 						assetDetailsModalOpen = props.assetDetailsModalOpen,
@@ -123,7 +123,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 				return if selectedAsset and use(props.assetDetailsModalOpen)
 					then scope:AssetDetailsModal {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						rawSelection = props.rawSelection,
 						asset = selectedAsset,
 						selectedAsset = props.selectedAsset,

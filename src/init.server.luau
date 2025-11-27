@@ -25,13 +25,15 @@ table.insert(
 )
 
 local assetIndices: Fusion.Value<types.AssetIndices> =
-	pluginScope:Value(plugin:GetSetting("AssetIndices ") :: types.AssetIndices? or {
+	pluginScope:Value(plugin:GetSetting("AssetIndices") :: types.AssetIndices? or {
 		assets = {},
 		assetUids = {},
 		assetRepos = {},
 		assetTags = {},
 		favorites = {},
 	})
+
+print(plugin:GetSetting("AssetIndices"))
 
 -- tag pruning
 for tag, assetUids in peek(assetIndices).assetTags do
@@ -43,10 +45,10 @@ for tag, assetUids in peek(assetIndices).assetTags do
 end
 
 pluginScope:Observer(assetIndices):onChange(function()
-	plugin:SetSetting("AssetIndices ", peek(assetIndices))
+	plugin:SetSetting("AssetIndices", peek(assetIndices))
 end)
 
-if plugin:GetSetting("AssetIndices ") == nil then
+if plugin:GetSetting("AssetIndices") == nil then
 	-- most likely a first install
 	print("installing default starlight repo...")
 	assetRegistry.importAssetRepoFromUri(
