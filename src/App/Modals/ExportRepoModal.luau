@@ -14,7 +14,7 @@ local Child = Fusion.Child
 
 type ExportRepoModalProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	assetRepo: types.AssetRepo,
 	exportAssetRepoModalOpen: Fusion.Value<boolean>,
 }
@@ -48,7 +48,7 @@ local function ExportRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Expor
 				backgroundColor = props.theme.bg_light,
 				size = UDim2.new(1, 0, 0, 256),
 				automaticSize = Enum.AutomaticSize.None,
-				text = assetRegistry.exportAssetRepo(props.assetIndicies, props.assetRepo.uid),
+				text = assetRegistry.exportAssetRepo(props.assetIndices, props.assetRepo.uid),
 				textYAlignment = Enum.TextYAlignment.Top,
 				textWrapped = true,
 				editable = false,

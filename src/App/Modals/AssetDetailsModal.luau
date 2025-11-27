@@ -17,7 +17,7 @@ local Child = Fusion.Child
 
 type AssetDetailsModalProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	rawSelection: Fusion.Value<{ Instance }>,
 	asset: types.Asset,
 	selectedAsset: Fusion.Value<types.Asset?>,
@@ -131,20 +131,20 @@ local function AssetDetailsModal(scope: types.AppScope, props: AssetDetailsModal
 				backgroundColor = props.theme.bg_light,
 				size = UDim2.new(1, 0, 0, 32),
 				text = scope:Computed(function(use)
-					return if use(props.assetIndicies).favorites[props.asset.uid] then "Unfavorite" else "Favorite"
+					return if use(props.assetIndices).favorites[props.asset.uid] then "Unfavorite" else "Favorite"
 				end),
 				automaticSize = Enum.AutomaticSize.Y,
 
 				onClick = function()
 					props.selectedAsset:set(nil)
 
-					if peek(props.assetIndicies).favorites[props.asset.uid] then
-						assetRegistry.unfavoriteAsset(props.assetIndicies, props.asset.uid)
+					if peek(props.assetIndices).favorites[props.asset.uid] then
+						assetRegistry.unfavoriteAsset(props.assetIndices, props.asset.uid)
 					else
-						assetRegistry.favoriteAsset(props.assetIndicies, props.asset.uid)
+						assetRegistry.favoriteAsset(props.assetIndices, props.asset.uid)
 					end
 
-					assetRegistry.update(props.assetIndicies)
+					assetRegistry.update(props.assetIndices)
 				end,
 
 				[Children] = scope:Border {
@@ -185,9 +185,9 @@ local function AssetDetailsModal(scope: types.AppScope, props: AssetDetailsModal
 					},
 
 					scope:Computed(function(use)
-						local assetIndicies = use(props.assetIndicies)
+						local assetIndices = use(props.assetIndices)
 						local assetRepo = if props.asset.assetRepo
-							then assetIndicies.assetRepos[props.asset.assetRepo]
+							then assetIndices.assetRepos[props.asset.assetRepo]
 							else nil
 
 						return if not assetRepo or not assetRepo.readonly

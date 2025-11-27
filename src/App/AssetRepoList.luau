@@ -45,7 +45,7 @@ end
 
 type AssetRepoListProps = {
 	theme: Theme.ThemeContext,
-	assetIndices: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	selectedAssetRepo: Fusion.Value<types.AssetRepo?>,
 	createRepoModalOpen: Fusion.Value<boolean>,
 	importRepoModalOpen: Fusion.Value<boolean>,

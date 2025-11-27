@@ -49,7 +49,7 @@ end
 
 type AppProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	rawSelection: Fusion.Value<{ Instance }>,
 	selection: Fusion.Computed<{ Instance }>,
 }
@@ -74,7 +74,7 @@ local function App(scope: types.AppScope, props: AppProps)
 		local filterQueryTokens =
 			unique(tokenize((use(filterQuery):gsub("%%", "%%%%"):gsub("%[", "%%["):gsub("%]", "%%]"))))
 
-		local assetIndicies = use(props.assetIndicies)
+		local assetIndices = use(props.assetIndices)
 
 		local matchTags = {}
 		local matchRepos = {}
@@ -85,7 +85,7 @@ local function App(scope: types.AppScope, props: AppProps)
 			if token:match("^<tag:") then
 				local tag = token:sub(6, -2)
 
-				if not assetIndicies.assetTags[tag] then
+				if not assetIndices.assetTags[tag] then
 					continue
 				end
 
@@ -93,7 +93,7 @@ local function App(scope: types.AppScope, props: AppProps)
 			elseif token:match("^<in:") then
 				local assetRepoUid = token:sub(5, -2)
 
-				if not assetIndicies.assetRepos[assetRepoUid] then
+				if not assetIndices.assetRepos[assetRepoUid] then
 					continue
 				end
 
@@ -109,14 +109,14 @@ local function App(scope: types.AppScope, props: AppProps)
 		-- luau lsp???
 		local assetUids: types.Set<string> = if selectedAssetRepo
 			then selectedAssetRepo.assetUids
-			else assetIndicies.assetUids
+			else assetIndices.assetUids
 
 		local filteredAssets = {}
 
 		-- TODO: more advanced filtering (i.e. flipbook type, is flipbook/static, creator type)
 
 		for _, uid in assetUids do
-			local asset = assetIndicies.assets[uid]
+			local asset = assetIndices.assets[uid]
 
 			if #filterQueryTokens == 0 then
 				table.insert(filteredAssets, asset)
@@ -173,7 +173,7 @@ local function App(scope: types.AppScope, props: AppProps)
 				end
 			end
 
-			if matchFavorite and not assetIndicies.favorites[uid] then
+			if matchFavorite and not assetIndices.favorites[uid] then
 				similar = false
 			end
 
@@ -227,7 +227,7 @@ local function App(scope: types.AppScope, props: AppProps)
 
 					scope:Modals {
 						theme = props.theme,
-						assetIndicies = props.assetIndicies,
+						assetIndices = props.assetIndices,
 						rawSelection = props.rawSelection,
 						selection = props.selection,
 						selectedAsset = selectedAsset,
@@ -359,10 +359,10 @@ local function App(scope: types.AppScope, props: AppProps)
 											selectedAssetRepo:set(nil)
 											warn("please wait while we update the repo...")
 											assetRegistry.importAssetRepoFromUri(
-												props.assetIndicies,
+												props.assetIndices,
 												assetRepo.externalUri
 											)
-											assetRegistry.update(props.assetIndicies)
+											assetRegistry.update(props.assetIndices)
 										end,
 
 										[Children] = Child {
@@ -564,7 +564,7 @@ local function App(scope: types.AppScope, props: AppProps)
 									scope:AssetList {
 										theme = props.theme,
 										assets = filteredAssets,
-										assetIndicies = props.assetIndicies,
+										assetIndices = props.assetIndices,
 										rawSelection = props.rawSelection,
 										selectedAsset = selectedAsset,
 										assetDetailsModalOpen = assetDetailsModalOpen,
@@ -581,7 +581,7 @@ local function App(scope: types.AppScope, props: AppProps)
 								[Children] = {
 									scope:AssetRepoList {
 										theme = props.theme,
-										assetIndices = props.assetIndicies,
+										assetIndices = props.assetIndices,
 										selectedAssetRepo = selectedAssetRepo,
 										createRepoModalOpen = createRepoModalOpen,
 										importRepoModalOpen = importRepoModalOpen,

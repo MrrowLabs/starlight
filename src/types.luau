@@ -62,7 +62,7 @@ export type AssetRepo = {
 	readonly: boolean,
 }
 
-export type AssetIndicies = {
+export type AssetIndices = {
 	-- in the form of uid: Asset object
 	-- also the more internal index
 	assets: { [string]: Asset },

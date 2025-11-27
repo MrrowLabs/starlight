@@ -15,7 +15,7 @@ local Child = Fusion.Child
 
 type CreateRepoModalProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	createRepoModalOpen: Fusion.Value<boolean>,
 }
 
@@ -105,7 +105,7 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 
 							props.createRepoModalOpen:set(false)
 
-							assetRegistry.addRepo(props.assetIndicies, peek(uid), {
+							assetRegistry.addRepo(props.assetIndices, peek(uid), {
 								uid = peek(uid),
 								name = peek(name),
 								description = peek(description),
@@ -117,7 +117,7 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 								readonly = false,
 							})
 
-							assetRegistry.update(props.assetIndicies)
+							assetRegistry.update(props.assetIndices)
 						end,
 
 						[Children] = scope:Border {

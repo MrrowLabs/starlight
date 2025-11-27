@@ -22,7 +22,7 @@ local Child = Fusion.Child
 
 type EditAssetModalProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	asset: types.Asset,
 	selectedAsset: Fusion.Value<types.Asset?>,
 	assetDetailsModalOpen: Fusion.Value<boolean>,
@@ -44,8 +44,8 @@ local function EditAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditAs
 	local tags = scope:Value(values(props.asset.tags))
 
 	local isEditable = scope:Computed(function(use)
-		local assetIndicies = use(props.assetIndicies)
-		local assetRepo = if props.asset.assetRepo then assetIndicies.assetRepos[props.asset.assetRepo] else nil
+		local assetIndices = use(props.assetIndices)
+		local assetRepo = if props.asset.assetRepo then assetIndices.assetRepos[props.asset.assetRepo] else nil
 
 		return not assetRepo or not assetRepo.readonly
 	end)
@@ -126,8 +126,8 @@ local function EditAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditAs
 							props.selectedAsset:set(nil)
 							props.editAssetModalOpen:set(false)
 
-							assetRegistry.deleteAsset(props.assetIndicies, props.asset.uid)
-							assetRegistry.update(props.assetIndicies)
+							assetRegistry.deleteAsset(props.assetIndices, props.asset.uid)
+							assetRegistry.update(props.assetIndices)
 						end,
 
 						[Children] = scope:Border {
@@ -154,19 +154,19 @@ local function EditAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditAs
 					props.editAssetModalOpen:set(false)
 					props.selectedAsset:set(nil)
 
-					local asset: types.BaseAsset<any, any> = peek(props.assetIndicies).assets[props.asset.uid]
+					local asset: types.BaseAsset<any, any> = peek(props.assetIndices).assets[props.asset.uid]
 					assert(asset, `unknown asset {props.asset.uid}`)
 
 					asset.name = peek(name)
 					asset.credits = peek(credits)
 
-					props.assetIndicies:set(peek(props.assetIndicies))
+					props.assetIndices:set(peek(props.assetIndices))
 
 					local addedTags, removedTags = arrayDiff(values(props.asset.tags), peek(tags))
-					assetRegistry.addTags(props.assetIndicies, props.asset.uid, table.unpack(addedTags))
-					assetRegistry.removeTags(props.assetIndicies, props.asset.uid, table.unpack(removedTags))
+					assetRegistry.addTags(props.assetIndices, props.asset.uid, table.unpack(addedTags))
+					assetRegistry.removeTags(props.assetIndices, props.asset.uid, table.unpack(removedTags))
 
-					assetRegistry.update(props.assetIndicies)
+					assetRegistry.update(props.assetIndices)
 				end,
 
 				[Children] = scope:Border {

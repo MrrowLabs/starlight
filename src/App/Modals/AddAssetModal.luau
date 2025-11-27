@@ -15,7 +15,7 @@ local Child = Fusion.Child
 
 type AddAssetModalProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	selection: Fusion.Computed<{ Instance }>,
 	selectedAssetRepo: Fusion.Value<types.AssetRepo?>,
 	addAssetModalOpen: Fusion.Value<boolean>,
@@ -127,24 +127,24 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 							props.addAssetModalOpen:set(false)
 
 							for _, instance in peek(props.selection) do
-								local assetUid = assetRegistry.addAssetFromInstance(props.assetIndicies, {
+								local assetUid = assetRegistry.addAssetFromInstance(props.assetIndices, {
 									name = if peek(isBulkImport) then instance.Name else peek(name),
 									credits = peek(credits),
 								}, instance)
 
-								assetRegistry.addTags(props.assetIndicies, assetUid, table.unpack(peek(tags)))
+								assetRegistry.addTags(props.assetIndices, assetUid, table.unpack(peek(tags)))
 
 								local selectedAssetRepo = peek(props.selectedAssetRepo)
 								if selectedAssetRepo then
 									assetRegistry.addAssetToAssetRepo(
-										props.assetIndicies,
+										props.assetIndices,
 										assetUid,
 										selectedAssetRepo.uid
 									)
 								end
 							end
 
-							assetRegistry.update(props.assetIndicies)
+							assetRegistry.update(props.assetIndices)
 						end,
 
 						[Children] = scope:Border {

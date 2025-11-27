@@ -18,7 +18,7 @@ local Child = Fusion.Child
 
 type EditRepoModalProps = {
 	theme: Theme.ThemeContext,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	selectedAssetRepo: types.AssetRepo,
 	selectedAssetRepoValue: Fusion.Value<types.AssetRepo?>,
 	editRepoModalOpen: Fusion.Value<boolean>,
@@ -119,9 +119,9 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 							props.editRepoModalOpen:set(false)
 							props.selectedAssetRepoValue:set(nil)
 
-							assetRegistry.deleteAssetRepo(props.assetIndicies, props.selectedAssetRepo.uid)
+							assetRegistry.deleteAssetRepo(props.assetIndices, props.selectedAssetRepo.uid)
 
-							assetRegistry.update(props.assetIndicies)
+							assetRegistry.update(props.assetIndices)
 						end,
 
 						[Children] = scope:Border {
@@ -153,7 +153,7 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 
 					props.editRepoModalOpen:set(false)
 
-					local assetInidicies = peek(props.assetIndicies)
+					local assetInidicies = peek(props.assetIndices)
 
 					if peek(uid) ~= props.selectedAssetRepo.uid then
 						assetInidicies.assetRepos[peek(uid)] = assetInidicies.assetRepos[props.selectedAssetRepo.uid]
@@ -175,7 +175,7 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 						(asset :: any).assetRepo = assetRepo.uid
 					end
 
-					props.assetIndicies:set(assetInidicies)
+					props.assetIndices:set(assetInidicies)
 					props.selectedAssetRepoValue:set(assetRepo)
 				end,
 

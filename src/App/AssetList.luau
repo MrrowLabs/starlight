@@ -19,7 +19,7 @@ local Child = Fusion.Child
 type AssetListProps = {
 	theme: Theme.ThemeContext,
 	assets: Fusion.UsedAs<{ types.Asset }>,
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	rawSelection: Fusion.Value<{ Instance }>,
 	selectedAsset: Fusion.Value<types.Asset?>,
 	assetDetailsModalOpen: Fusion.Value<boolean>,
@@ -79,8 +79,8 @@ local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListPr
 
 							[OnEvent "MouseButton1Click"] = function()
 								if peek(props.bulkDeleteMode) then
-									assetRegistry.deleteAsset(props.assetIndicies, asset.uid)
-									assetRegistry.update(props.assetIndicies)
+									assetRegistry.deleteAsset(props.assetIndices, asset.uid)
+									assetRegistry.update(props.assetIndices)
 									return
 								end
 
@@ -97,7 +97,7 @@ local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListPr
 									theme = props.theme,
 									radius = UDim.new(0, 8),
 									strokeColor = scope:Computed(function(use)
-										return if use(props.assetIndicies).favorites[use(asset).uid]
+										return if use(props.assetIndices).favorites[use(asset).uid]
 											then use(props.theme.primary)
 											else use(props.theme.border_muted)
 									end),

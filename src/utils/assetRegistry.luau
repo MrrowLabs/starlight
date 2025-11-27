@@ -18,30 +18,30 @@ local FLIPBOOK_LAYOUT_CONVERSIONS = {
 
 type AssetMetadata = { name: string, credits: string }
 
-function assetRegistry.update(assetIndicies: Fusion.Value<types.AssetIndicies>)
-	assetIndicies:set(peek(assetIndicies))
+function assetRegistry.update(assetIndices: Fusion.Value<types.AssetIndices>)
+	assetIndices:set(peek(assetIndices))
 end
 
-function assetRegistry.getAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string): types.Asset?
-	return peek(assetIndicies).assets[assetUid]
+function assetRegistry.getAsset(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string): types.Asset?
+	return peek(assetIndices).assets[assetUid]
 end
 
 function assetRegistry.getAssetRepo(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	assetRepoUid: string
 ): types.AssetRepo?
-	return peek(assetIndicies).assetRepos[assetRepoUid]
+	return peek(assetIndices).assetRepos[assetRepoUid]
 end
 
-function assetRegistry.getTagged(assetIndicies: Fusion.Value<types.AssetIndicies>, tag: string): types.Set<string>
-	local taggedAssetsUids = peek(assetIndicies).assetTags[tag]
+function assetRegistry.getTagged(assetIndices: Fusion.Value<types.AssetIndices>, tag: string): types.Set<string>
+	local taggedAssetsUids = peek(assetIndices).assetTags[tag]
 	assert(taggedAssetsUids, `unknown asset {tag}`)
 	return taggedAssetsUids
 end
 
 -- returns a uid of the created asset
 function assetRegistry.addAssetFromInstance(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	metadata: AssetMetadata,
 	instance: Instance
 ): string
@@ -80,7 +80,7 @@ function assetRegistry.addAssetFromInstance(
 			}
 			else nil
 
-		assetRegistry.addAsset(assetIndicies, uid, "texture", metadata, {
+		assetRegistry.addAsset(assetIndices, uid, "texture", metadata, {
 			uri = textureUri,
 			color = textureColor,
 			flipbook = flipbookData,
@@ -88,7 +88,7 @@ function assetRegistry.addAssetFromInstance(
 	elseif assetType == "script" then
 		local instance = instance :: types.ScriptAssetInstanceTypes
 
-		assetRegistry.addAsset(assetIndicies, uid, "script", metadata, {
+		assetRegistry.addAsset(assetIndices, uid, "script", metadata, {
 			scriptType = if instance:IsA("LocalScript")
 				then "client"
 				elseif instance:IsA("ModuleScript") then "module"
@@ -101,14 +101,14 @@ function assetRegistry.addAssetFromInstance(
 end
 
 function assetRegistry.addAsset(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	uid: string,
 	assetType: string,
 	metadata: AssetMetadata,
 	props: types.AssetProps
 )
-	assert(not peek(assetIndicies).assets[uid], `asset with uid {uid} already exists`)
-	peek(assetIndicies).assets[uid] = {
+	assert(not peek(assetIndices).assets[uid], `asset with uid {uid} already exists`)
+	peek(assetIndices).assets[uid] = {
 		type = assetType,
 		uid = uid,
 		name = metadata.name,
@@ -116,18 +116,18 @@ function assetRegistry.addAsset(
 		tags = {},
 		inner = props,
 	} :: types.BaseAsset
-	peek(assetIndicies).assetUids[uid] = uid
+	peek(assetIndices).assetUids[uid] = uid
 end
 
-function assetRegistry.addRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, uid: string, props: types.AssetRepo)
-	assert(not peek(assetIndicies).assetRepos[uid], `asset repo with uid {uid} already exists`)
-	peek(assetIndicies).assetRepos[uid] = props
+function assetRegistry.addRepo(assetIndices: Fusion.Value<types.AssetIndices>, uid: string, props: types.AssetRepo)
+	assert(not peek(assetIndices).assetRepos[uid], `asset repo with uid {uid} already exists`)
+	peek(assetIndices).assetRepos[uid] = props
 end
 
-function assetRegistry.addTags(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string, ...: string)
-	local asset = peek(assetIndicies).assets[assetUid]
+function assetRegistry.addTags(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string, ...: string)
+	local asset = peek(assetIndices).assets[assetUid]
 	assert(asset, `unknown asset {assetUid}`)
-	local assetTags = peek(assetIndicies).assetTags
+	local assetTags = peek(assetIndices).assetTags
 
 	for _, tag in { ... } do
 		asset.tags[tag] = tag
@@ -141,19 +141,19 @@ function assetRegistry.addTags(assetIndicies: Fusion.Value<types.AssetIndicies>,
 	end
 end
 
-function assetRegistry.favoriteAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
-	assert(peek(assetIndicies).assets[assetUid], `asset {assetUid} does not exist`)
-	peek(assetIndicies).favorites[assetUid] = assetUid
+function assetRegistry.favoriteAsset(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string)
+	assert(peek(assetIndices).assets[assetUid], `asset {assetUid} does not exist`)
+	peek(assetIndices).favorites[assetUid] = assetUid
 end
 
-function assetRegistry.unfavoriteAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
-	assert(peek(assetIndicies).assets[assetUid], `asset {assetUid} does not exist`)
-	peek(assetIndicies).favorites[assetUid] = nil
+function assetRegistry.unfavoriteAsset(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string)
+	assert(peek(assetIndices).assets[assetUid], `asset {assetUid} does not exist`)
+	peek(assetIndices).favorites[assetUid] = nil
 end
 
-function assetRegistry.removeTags(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string, ...: string)
-	local asset = peek(assetIndicies).assets[assetUid]
-	local assetTags = peek(assetIndicies).assetTags
+function assetRegistry.removeTags(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string, ...: string)
+	local asset = peek(assetIndices).assets[assetUid]
+	local assetTags = peek(assetIndices).assetTags
 
 	for _, tag in { ... } do
 		if not asset.tags[tag] then
@@ -177,12 +177,12 @@ function assetRegistry.removeTags(assetIndicies: Fusion.Value<types.AssetIndicie
 end
 
 function assetRegistry.addAssetToAssetRepo(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	assetUid: string,
 	assetRepoUid: string
 )
-	local assetRepo = peek(assetIndicies).assetRepos[assetRepoUid]
-	local asset = peek(assetIndicies).assets[assetUid]
+	local assetRepo = peek(assetIndices).assetRepos[assetRepoUid]
+	local asset = peek(assetIndices).assets[assetUid]
 
 	assert(assetRepo, `asset repo {assetRepoUid} does not exist`)
 	assert(asset, `asset {assetUid} does not exist`)
@@ -193,13 +193,13 @@ function assetRegistry.addAssetToAssetRepo(
 	(asset :: any).assetRepo = assetRepoUid
 end
 
-function assetRegistry.removeAssetFromRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
-	local asset = peek(assetIndicies).assets[assetUid]
+function assetRegistry.removeAssetFromRepo(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string)
+	local asset = peek(assetIndices).assets[assetUid]
 
 	assert(asset, `asset {assetUid} does not exist`)
 	assert(asset.assetRepo, `asset {assetUid} does not belong in an asset repo`)
 
-	local previousAssetRepo = peek(assetIndicies).assetRepos[asset.assetRepo]
+	local previousAssetRepo = peek(assetIndices).assetRepos[asset.assetRepo]
 
 	assert(previousAssetRepo, `previous asset repo {asset.assetRepo} does not exist`)
 	assert(not previousAssetRepo.readonly, `previous asset repo {asset.assetRepo} is readonly`)
@@ -209,46 +209,43 @@ function assetRegistry.removeAssetFromRepo(assetIndicies: Fusion.Value<types.Ass
 end
 
 function assetRegistry.deleteAsset(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	assetUid: string,
 	keepFavorite: boolean?
 )
-	local asset = peek(assetIndicies).assets[assetUid]
+	local asset = peek(assetIndices).assets[assetUid]
 	assert(asset, `asset {assetUid} does not exist`)
 
-	assetRegistry.removeTags(assetIndicies, assetUid, table.unpack(values(asset.tags)))
+	assetRegistry.removeTags(assetIndices, assetUid, table.unpack(values(asset.tags)))
 	if not keepFavorite then
-		peek(assetIndicies).favorites[assetUid] = nil
+		peek(assetIndices).favorites[assetUid] = nil
 	end
-	peek(assetIndicies).assetUids[assetUid] = nil
-	peek(assetIndicies).assets[assetUid] = nil
+	peek(assetIndices).assetUids[assetUid] = nil
+	peek(assetIndices).assets[assetUid] = nil
 	if asset.assetRepo then
-		local assetRepo = assetRegistry.getAssetRepo(assetIndicies, asset.assetRepo)
+		local assetRepo = assetRegistry.getAssetRepo(assetIndices, asset.assetRepo)
 		assert(assetRepo, `asset repo {asset.assetRepo} does not exist`)
 		assetRepo.assetUids[assetUid] = nil
 	end
 end
 
 function assetRegistry.deleteAssetRepo(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	assetRepoUid: string,
 	saveFavorites: boolean?
 )
-	local assetRepo = peek(assetIndicies).assetRepos[assetRepoUid]
+	local assetRepo = peek(assetIndices).assetRepos[assetRepoUid]
 	assert(assetRepo, `asset repo {assetRepoUid} does not exist`)
 
 	for _, assetUid in assetRepo.assetUids do
-		assetRegistry.deleteAsset(assetIndicies, assetUid, saveFavorites)
+		assetRegistry.deleteAsset(assetIndices, assetUid, saveFavorites)
 	end
 
-	peek(assetIndicies).assetRepos[assetRepoUid] = nil
+	peek(assetIndices).assetRepos[assetRepoUid] = nil
 end
 
-function assetRegistry.exportAsset(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
-	assetUid: string
-): types.AssetExport
-	local asset = assetRegistry.getAsset(assetIndicies, assetUid)
+function assetRegistry.exportAsset(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string): types.AssetExport
+	local asset = assetRegistry.getAsset(assetIndices, assetUid)
 	assert(asset, `unknown asset {assetUid}`)
 	return {
 		type = asset.type,
@@ -260,8 +257,8 @@ function assetRegistry.exportAsset(
 	}
 end
 
-function assetRegistry.exportAssetRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, assetRepoUid: string): string
-	local assetRepo = assetRegistry.getAssetRepo(assetIndicies, assetRepoUid)
+function assetRegistry.exportAssetRepo(assetIndices: Fusion.Value<types.AssetIndices>, assetRepoUid: string): string
+	local assetRepo = assetRegistry.getAssetRepo(assetIndices, assetRepoUid)
 	assert(assetRepo, `asset repo {assetRepoUid} does not exist`)
 
 	local assetRepoExport: types.AssetRepoExport = {
@@ -275,9 +272,9 @@ function assetRegistry.exportAssetRepo(assetIndicies: Fusion.Value<types.AssetIn
 	}
 
 	for _, assetUid in assetRepo.assetUids do
-		local asset = assetRegistry.getAsset(assetIndicies, assetUid)
+		local asset = assetRegistry.getAsset(assetIndices, assetUid)
 		assert(asset, `asset {assetUid} does not exist`)
-		table.insert(assetRepoExport.assets, assetRegistry.exportAsset(assetIndicies, assetUid))
+		table.insert(assetRepoExport.assets, assetRegistry.exportAsset(assetIndices, assetUid))
 	end
 
 	return HttpService:JSONEncode(assetRepoExport)
@@ -290,17 +287,17 @@ type ImportAssetRepoExtra = {
 }
 
 function assetRegistry.importAssetRepo(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetIndices: Fusion.Value<types.AssetIndices>,
 	assetRepoExport: types.AssetRepoExport,
 	extra: ImportAssetRepoExtra
 )
 	local extra: ImportAssetRepoExtra = extra or {}
 
-	if assetRegistry.getAssetRepo(assetIndicies, assetRepoExport.uid) then
-		assetRegistry.deleteAssetRepo(assetIndicies, assetRepoExport.uid, true)
+	if assetRegistry.getAssetRepo(assetIndices, assetRepoExport.uid) then
+		assetRegistry.deleteAssetRepo(assetIndices, assetRepoExport.uid, true)
 	end
 
-	assetRegistry.addRepo(assetIndicies, assetRepoExport.uid, {
+	assetRegistry.addRepo(assetIndices, assetRepoExport.uid, {
 		uid = assetRepoExport.uid,
 		name = assetRepoExport.name,
 		description = assetRepoExport.description,
@@ -313,28 +310,28 @@ function assetRegistry.importAssetRepo(
 	})
 
 	for _, asset in assetRepoExport.assets do
-		assetRegistry.addAsset(assetIndicies, asset.uid, asset.type, {
+		assetRegistry.addAsset(assetIndices, asset.uid, asset.type, {
 			credits = asset.credits,
 			name = asset.name,
 		}, asset.inner)
-		assetRegistry.addTags(assetIndicies, asset.uid, table.unpack(values(asset.tags)))
-		assetRegistry.addAssetToAssetRepo(assetIndicies, asset.uid, assetRepoExport.uid)
+		assetRegistry.addTags(assetIndices, asset.uid, table.unpack(values(asset.tags)))
+		assetRegistry.addAssetToAssetRepo(assetIndices, asset.uid, assetRepoExport.uid)
 	end
 
-	local assetRepo = assetRegistry.getAssetRepo(assetIndicies, assetRepoExport.uid)
+	local assetRepo = assetRegistry.getAssetRepo(assetIndices, assetRepoExport.uid)
 	assert(assetRepo, `unknown asset repo {assetRepoExport.uid}`)
 	assetRepo.external = extra.external or false
 	assetRepo.externalUri = extra.externalUri
 	assetRepo.readonly = extra.readonly or false
 
-	for favoriteAssetUid in peek(assetIndicies).favorites do
-		if not peek(assetIndicies).assets[favoriteAssetUid] then
-			peek(assetIndicies).favorites[favoriteAssetUid] = nil
+	for favoriteAssetUid in peek(assetIndices).favorites do
+		if not peek(assetIndices).assets[favoriteAssetUid] then
+			peek(assetIndices).favorites[favoriteAssetUid] = nil
 		end
 	end
 end
 
-function assetRegistry.importAssetRepoFromUri(assetIndicies: Fusion.Value<types.AssetIndicies>, uri: string)
+function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.AssetIndices>, uri: string)
 	local ok, response = pcall(HttpService.GetAsync, HttpService, uri)
 
 	if not ok then
@@ -346,7 +343,7 @@ function assetRegistry.importAssetRepoFromUri(assetIndicies: Fusion.Value<types.
 
 	-- TODO: probably validate the data
 
-	assetRegistry.importAssetRepo(assetIndicies, assetRepoExport, {
+	assetRegistry.importAssetRepo(assetIndices, assetRepoExport, {
 		external = true,
 		externalUri = uri,
 		readonly = true,
