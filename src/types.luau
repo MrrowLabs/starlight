@@ -7,7 +7,7 @@ export type AppScope<T = {}> = Fusion.Scope<typeof(Fusion) & {
 	plugin: Plugin,
 } & T>
 
-export type AssetTypes = "texture"
+export type AssetTypes = "texture" | "script"
 
 export type BaseAsset<T = any, I = any> = {
 	type: T,
@@ -34,12 +34,16 @@ export type TextureAssetProps = {
 
 export type TextureAsset = BaseAsset<"texture", TextureAssetProps>
 
+export type TextureAssetInstanceTypes = ParticleEmitter | Beam | Decal | Texture | ImageLabel | ImageButton
+
 export type ScriptAssetProps = {
-	scriptType: "server" | "client",
+	scriptType: "server" | "client" | "module",
 	source: string,
 }
 
 export type ScriptAsset = BaseAsset<"script", ScriptAssetProps>
+
+export type ScriptAssetInstanceTypes = Script | ModuleScript | LocalScript
 
 export type AssetProps = TextureAssetProps | ScriptAssetProps
 

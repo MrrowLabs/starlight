@@ -11,6 +11,7 @@ type EditAssetFormProps = {
 	name: Fusion.Value<string>,
 	credits: Fusion.Value<string>,
 	tags: Fusion.Value<{ string }>,
+	nameFieldDisabled: Fusion.UsedAs<boolean>?,
 }
 
 local function EditAssetForm(scope: Fusion.Scope<typeof(Fusion)>, props: EditAssetFormProps)
@@ -53,6 +54,7 @@ local function EditAssetForm(scope: Fusion.Scope<typeof(Fusion)>, props: EditAss
 				description = "Create a name for your asset! <i>This does support rich text by the way</i>",
 				input = props.name,
 				placeholder = "My really cool asset",
+				disabled = props.nameFieldDisabled,
 			},
 
 			scope:Input {

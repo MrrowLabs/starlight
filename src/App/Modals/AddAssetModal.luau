@@ -35,6 +35,10 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 	local credits = scope:Value("")
 	local tags = scope:Value({})
 
+	local isBulkImport = scope:Computed(function(use)
+		return #use(props.selection) > 1
+	end)
+
 	return scope:Modal {
 		theme = props.theme,
 
@@ -51,8 +55,10 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 
 					if #selection == 0 then
 						return `Please select something valid to add!`
-					else
+					elseif #selection == 1 then
 						return `You are adding <b>{selection[1]:GetFullName()}</b>`
+					else
+						return `You are <b>bulk adding {#selection} items!</b> <i>Will be using each instance name instead of manual input</i>`
 					end
 				end),
 				textColor = props.theme.text_muted,
@@ -65,6 +71,7 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 				name = name,
 				credits = credits,
 				tags = tags,
+				nameFieldDisabled = isBulkImport,
 			},
 
 			scope:New "Frame" {
@@ -111,23 +118,30 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 						end),
 
 						onClick = function()
-							if peek(name):match("^%s*$") or peek(credits):match("^%s*$") then
+							if
+								(peek(name):match("^%s*$") and not peek(isBulkImport)) or peek(credits):match("^%s*$")
+							then
 								return
 							end
 
 							props.addAssetModalOpen:set(false)
 
-							local assetUid = assetRegistry.addAssetFromInstance(props.assetIndicies, {
-								type = "texture",
-								name = peek(name),
-								credits = peek(credits),
-							}, peek(props.selection)[1])
+							for _, instance in peek(props.selection) do
+								local assetUid = assetRegistry.addAssetFromInstance(props.assetIndicies, {
+									name = if peek(isBulkImport) then instance.Name else peek(name),
+									credits = peek(credits),
+								}, instance)
 
-							assetRegistry.addTags(props.assetIndicies, assetUid, table.unpack(peek(tags)))
+								assetRegistry.addTags(props.assetIndicies, assetUid, table.unpack(peek(tags)))
 
-							local selectedAssetRepo = peek(props.selectedAssetRepo)
-							if selectedAssetRepo then
-								assetRegistry.addAssetToAssetRepo(props.assetIndicies, assetUid, selectedAssetRepo.uid)
+								local selectedAssetRepo = peek(props.selectedAssetRepo)
+								if selectedAssetRepo then
+									assetRegistry.addAssetToAssetRepo(
+										props.assetIndicies,
+										assetUid,
+										selectedAssetRepo.uid
+									)
+								end
 							end
 						end,
 

@@ -76,6 +76,23 @@ local function Input(scope: Fusion.Scope<typeof(Fusion)>, props: InputProps)
 						theme = props.theme,
 						radius = UDim.new(0, 8),
 					},
+
+					scope:New "Frame" {
+						BackgroundTransparency = 0.5,
+						BackgroundColor3 = props.theme.bg_dark,
+						Size = UDim2.new(1, 16, 1, 16),
+						Position = UDim2.fromScale(0.5, 0.5),
+						AnchorPoint = Vector2.new(0.5, 0.5),
+						Visible = scope:Computed(function(use)
+							return use(props.disabled)
+						end),
+
+						[Children] = scope:Border {
+							theme = props.theme,
+							radius = UDim.new(0, 8),
+							strokeSize = 0,
+						},
+					},
 				},
 			},
 		},

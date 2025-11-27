@@ -5,6 +5,7 @@ local constants = require(script.constants)
 local Fusion = require(script.packages.Fusion)
 local types = require(script.types)
 local assetRegistry = require(script.utils.assetRegistry)
+local getAssetTypeFromInstance = require(script.utils.getAssetTypeFromInstance)
 
 local scoped = Fusion.scoped
 local doCleanup = Fusion.doCleanup
@@ -63,14 +64,7 @@ local selection: Fusion.Computed<{ Instance }> = pluginScope:Computed(function(u
 	local selection: { Instance } = {}
 
 	for _, instance in use(rawSelection) do
-		if
-			not instance:IsA("ParticleEmitter")
-			and not instance:IsA("Beam")
-			and not instance:IsA("Decal")
-			and not instance:IsA("Texture")
-			and not instance:IsA("ImageLabel")
-			and not instance:IsA("ImageButton")
-		then
+		if not getAssetTypeFromInstance(instance) then
 			continue
 		end
 

@@ -2,6 +2,7 @@ local AssetService = game:GetService("AssetService")
 local HttpService = game:GetService("HttpService")
 local Fusion = require(script.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.types)
+local getAssetTypeFromInstance = require(script.Parent.getAssetTypeFromInstance)
 local serde = require(script.Parent.serde)
 local values = require(script.Parent.values)
 
@@ -15,7 +16,7 @@ local FLIPBOOK_LAYOUT_CONVERSIONS = {
 	[Enum.ParticleFlipbookLayout.Grid8x8] = 8,
 }
 
-type AssetMetadata = { type: types.AssetTypes, name: string, credits: string }
+type AssetMetadata = { name: string, credits: string }
 
 function assetRegistry.getAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string): types.Asset?
 	return peek(assetIndicies).assets[assetUid]
@@ -42,14 +43,15 @@ function assetRegistry.addAssetFromInstance(
 ): string
 	local uid = HttpService:GenerateGUID()
 
-	if
-		instance:IsA("ParticleEmitter")
-		or instance:IsA("Beam")
-		or instance:IsA("Decal")
-		or instance:IsA("Texture")
-		or instance:IsA("ImageLabel")
-		or instance:IsA("ImageButton")
-	then
+	local assetType = getAssetTypeFromInstance(instance)
+	assert(assetType, `unknown asset for {instance}`)
+
+	-- i think the intellisense hates me :wilted_rose:
+	-- just show me the types of texture or script 🙏🙏🙏
+
+	if assetType == "texture" then
+		local instance = instance :: types.TextureAssetInstanceTypes
+
 		local textureUri = if instance:IsA("ParticleEmitter")
 				or instance:IsA("Beam")
 				or instance:IsA("Decal")
@@ -74,13 +76,21 @@ function assetRegistry.addAssetFromInstance(
 			}
 			else nil
 
-		assetRegistry.addAsset(assetIndicies, uid, metadata, {
+		assetRegistry.addAsset(assetIndicies, uid, "texture", metadata, {
 			uri = textureUri,
 			color = textureColor,
 			flipbook = flipbookData,
 		})
-	else
-		error(`invalid instance type {instance.ClassName}`)
+	elseif assetType == "script" then
+		local instance = instance :: types.ScriptAssetInstanceTypes
+
+		assetRegistry.addAsset(assetIndicies, uid, "script", metadata, {
+			scriptType = if instance:IsA("Script")
+				then "server"
+				elseif instance:IsA("ModuleScript") then "module"
+				else "client",
+			source = instance.Source,
+		})
 	end
 
 	return uid
@@ -89,12 +99,13 @@ end
 function assetRegistry.addAsset(
 	assetIndicies: Fusion.Value<types.AssetIndicies>,
 	uid: string,
+	assetType: string,
 	metadata: AssetMetadata,
 	props: types.AssetProps
 )
 	assert(not peek(assetIndicies).assets[uid], `asset with uid {uid} already exists`)
 	peek(assetIndicies).assets[uid] = {
-		type = metadata.type,
+		type = assetType,
 		uid = uid,
 		name = metadata.name,
 		credits = metadata.credits,
@@ -303,8 +314,7 @@ function assetRegistry.importAssetRepo(
 	})
 
 	for _, asset in assetRepoExport.assets do
-		assetRegistry.addAsset(assetIndicies, asset.uid, {
-			type = asset.type :: any,
+		assetRegistry.addAsset(assetIndicies, asset.uid, asset.type, {
 			credits = asset.credits,
 			name = asset.name,
 		}, asset.inner)
