@@ -33,8 +33,6 @@ local assetIndices: Fusion.Value<types.AssetIndices> =
 		favorites = {},
 	})
 
-print(plugin:GetSetting("AssetIndices"))
-
 -- tag pruning
 for tag, assetUids in peek(assetIndices).assetTags do
 	if next(assetUids) ~= nil then
