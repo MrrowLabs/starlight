@@ -17,6 +17,7 @@ local Child = Fusion.Child
 type ImportRepoModalProps = {
 	theme: Theme.ThemeContext,
 	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	selectedAssetRepo: Fusion.Value<types.AssetRepo?>,
 	importAssetRepoModalOpen: Fusion.Value<boolean>,
 }
 
@@ -105,12 +106,15 @@ local function ImportRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Impor
 
 						onClick = function()
 							props.importAssetRepoModalOpen:set(false)
+							props.selectedAssetRepo:set(nil)
 
 							if peek(data):match("^http") then
 								assetRegistry.importAssetRepoFromUri(props.assetIndicies, peek(data))
 							else
 								assetRegistry.importAssetRepo(props.assetIndicies, HttpService:JSONDecode(peek(data)))
 							end
+
+							assetRegistry.update(props.assetIndicies)
 						end,
 
 						[Children] = scope:Border {

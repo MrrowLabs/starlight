@@ -127,6 +127,7 @@ local function EditAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditAs
 							props.editAssetModalOpen:set(false)
 
 							assetRegistry.deleteAsset(props.assetIndicies, props.asset.uid)
+							assetRegistry.update(props.assetIndicies)
 						end,
 
 						[Children] = scope:Border {

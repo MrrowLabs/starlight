@@ -208,22 +208,37 @@ function assetRegistry.removeAssetFromRepo(assetIndicies: Fusion.Value<types.Ass
 	(asset :: any).assetRepo = nil
 end
 
-function assetRegistry.deleteAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
+function assetRegistry.deleteAsset(
+	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetUid: string,
+	keepFavorite: boolean?
+)
 	local asset = peek(assetIndicies).assets[assetUid]
 	assert(asset, `asset {assetUid} does not exist`)
 
 	assetRegistry.removeTags(assetIndicies, assetUid, table.unpack(values(asset.tags)))
-	peek(assetIndicies).favorites[assetUid] = nil
+	if not keepFavorite then
+		peek(assetIndicies).favorites[assetUid] = nil
+	end
 	peek(assetIndicies).assetUids[assetUid] = nil
 	peek(assetIndicies).assets[assetUid] = nil
+	if asset.assetRepo then
+		local assetRepo = assetRegistry.getAssetRepo(assetIndicies, asset.assetRepo)
+		assert(assetRepo, `asset repo {asset.assetRepo} does not exist`)
+		assetRepo.assetUids[assetUid] = nil
+	end
 end
 
-function assetRegistry.deleteAssetRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, assetRepoUid: string)
+function assetRegistry.deleteAssetRepo(
+	assetIndicies: Fusion.Value<types.AssetIndicies>,
+	assetRepoUid: string,
+	saveFavorites: boolean?
+)
 	local assetRepo = peek(assetIndicies).assetRepos[assetRepoUid]
 	assert(assetRepo, `asset repo {assetRepoUid} does not exist`)
 
 	for _, assetUid in assetRepo.assetUids do
-		assetRegistry.deleteAsset(assetIndicies, assetUid)
+		assetRegistry.deleteAsset(assetIndicies, assetUid, saveFavorites)
 	end
 
 	peek(assetIndicies).assetRepos[assetRepoUid] = nil
@@ -282,7 +297,7 @@ function assetRegistry.importAssetRepo(
 	local extra: ImportAssetRepoExtra = extra or {}
 
 	if assetRegistry.getAssetRepo(assetIndicies, assetRepoExport.uid) then
-		assetRegistry.deleteAssetRepo(assetIndicies, assetRepoExport.uid)
+		assetRegistry.deleteAssetRepo(assetIndicies, assetRepoExport.uid, true)
 	end
 
 	assetRegistry.addRepo(assetIndicies, assetRepoExport.uid, {
@@ -311,6 +326,12 @@ function assetRegistry.importAssetRepo(
 	assetRepo.external = extra.external or false
 	assetRepo.externalUri = extra.externalUri
 	assetRepo.readonly = extra.readonly or false
+
+	for favoriteAssetUid in peek(assetIndicies).favorites do
+		if not peek(assetIndicies).assets[favoriteAssetUid] then
+			peek(assetIndicies).favorites[favoriteAssetUid] = nil
+		end
+	end
 end
 
 function assetRegistry.importAssetRepoFromUri(assetIndicies: Fusion.Value<types.AssetIndicies>, uri: string)

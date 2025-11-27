@@ -84,6 +84,7 @@ local function Modals(scope: types.AppScope, props: ModalsProps)
 					then scope:ImportRepoModal {
 						theme = props.theme,
 						assetIndicies = props.assetIndicies,
+						selectedAssetRepo = props.selectedAssetRepo,
 						importAssetRepoModalOpen = props.importRepoModalOpen,
 					}
 					else nil

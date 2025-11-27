@@ -136,13 +136,15 @@ local function AssetDetailsModal(scope: types.AppScope, props: AssetDetailsModal
 				automaticSize = Enum.AutomaticSize.Y,
 
 				onClick = function()
+					props.selectedAsset:set(nil)
+
 					if peek(props.assetIndicies).favorites[props.asset.uid] then
 						assetRegistry.unfavoriteAsset(props.assetIndicies, props.asset.uid)
 					else
 						assetRegistry.favoriteAsset(props.assetIndicies, props.asset.uid)
 					end
 
-					props.selectedAsset:set(nil)
+					assetRegistry.update(props.assetIndicies)
 				end,
 
 				[Children] = scope:Border {
