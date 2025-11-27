@@ -164,6 +164,8 @@ local function EditAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditAs
 					local addedTags, removedTags = arrayDiff(values(props.asset.tags), peek(tags))
 					assetRegistry.addTags(props.assetIndicies, props.asset.uid, table.unpack(addedTags))
 					assetRegistry.removeTags(props.assetIndicies, props.asset.uid, table.unpack(removedTags))
+
+					assetRegistry.update(props.assetIndicies)
 				end,
 
 				[Children] = scope:Border {

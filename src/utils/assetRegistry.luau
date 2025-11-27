@@ -18,6 +18,10 @@ local FLIPBOOK_LAYOUT_CONVERSIONS = {
 
 type AssetMetadata = { name: string, credits: string }
 
+function assetRegistry.update(assetIndicies: Fusion.Value<types.AssetIndicies>)
+	assetIndicies:set(peek(assetIndicies))
+end
+
 function assetRegistry.getAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string): types.Asset?
 	return peek(assetIndicies).assets[assetUid]
 end
@@ -113,13 +117,11 @@ function assetRegistry.addAsset(
 		inner = props,
 	} :: types.BaseAsset
 	peek(assetIndicies).assetUids[uid] = uid
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.addRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, uid: string, props: types.AssetRepo)
 	assert(not peek(assetIndicies).assetRepos[uid], `asset repo with uid {uid} already exists`)
 	peek(assetIndicies).assetRepos[uid] = props
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.addTags(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string, ...: string)
@@ -137,20 +139,16 @@ function assetRegistry.addTags(assetIndicies: Fusion.Value<types.AssetIndicies>,
 		assert(assetTags[tag], `missing tags table for {tag}`)
 		assetTags[tag][assetUid] = assetUid
 	end
-
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.favoriteAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
 	assert(peek(assetIndicies).assets[assetUid], `asset {assetUid} does not exist`)
 	peek(assetIndicies).favorites[assetUid] = assetUid
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.unfavoriteAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
 	assert(peek(assetIndicies).assets[assetUid], `asset {assetUid} does not exist`)
 	peek(assetIndicies).favorites[assetUid] = nil
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.removeTags(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string, ...: string)
@@ -176,8 +174,6 @@ function assetRegistry.removeTags(assetIndicies: Fusion.Value<types.AssetIndicie
 			assetTags[tag] = nil
 		end
 	end
-
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.addAssetToAssetRepo(
@@ -195,8 +191,6 @@ function assetRegistry.addAssetToAssetRepo(
 
 	assetRepo.assetUids[assetUid] = assetUid;
 	(asset :: any).assetRepo = assetRepoUid
-
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.removeAssetFromRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
@@ -212,8 +206,6 @@ function assetRegistry.removeAssetFromRepo(assetIndicies: Fusion.Value<types.Ass
 
 	previousAssetRepo.assetUids[assetUid] = nil
 	(asset :: any).assetRepo = nil
-
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.deleteAsset(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
@@ -224,8 +216,6 @@ function assetRegistry.deleteAsset(assetIndicies: Fusion.Value<types.AssetIndici
 	peek(assetIndicies).favorites[assetUid] = nil
 	peek(assetIndicies).assetUids[assetUid] = nil
 	peek(assetIndicies).assets[assetUid] = nil
-
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.deleteAssetRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, assetRepoUid: string)
@@ -237,8 +227,6 @@ function assetRegistry.deleteAssetRepo(assetIndicies: Fusion.Value<types.AssetIn
 	end
 
 	peek(assetIndicies).assetRepos[assetRepoUid] = nil
-
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.exportAsset(
@@ -323,8 +311,6 @@ function assetRegistry.importAssetRepo(
 	assetRepo.external = extra.external or false
 	assetRepo.externalUri = extra.externalUri
 	assetRepo.readonly = extra.readonly or false
-
-	assetIndicies:set(peek(assetIndicies))
 end
 
 function assetRegistry.importAssetRepoFromUri(assetIndicies: Fusion.Value<types.AssetIndicies>, uri: string)

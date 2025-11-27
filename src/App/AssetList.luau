@@ -3,6 +3,7 @@ local Fusion = require(script.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.types)
 local AssetRender = require(script.Parent.AssetRender)
 local applyAsset = require(script.Parent.Parent.utils.applyAsset)
+local assetRegistry = require(script.Parent.Parent.utils.assetRegistry)
 local Border = require(script.Parent.components.Border)
 local Button = require(script.Parent.components.Button)
 local Text = require(script.Parent.components.Text)
@@ -76,6 +77,13 @@ local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListPr
 							Size = UDim2.fromOffset(80, 80),
 
 							[OnEvent "MouseButton1Click"] = function()
+								-- print(UserInputService:GetKeysPressed())
+								-- if UserInputService:IsKeyDown(Enum.KeyCode.Delete) then
+								-- 	assetRegistry.deleteAsset(props.assetIndicies, asset.uid)
+								-- 	assetRegistry.update(props.assetIndicies)
+								-- 	return
+								-- end
+
 								props.selectedAsset:set(asset)
 								props.assetDetailsModalOpen:set(true)
 							end,

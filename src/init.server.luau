@@ -40,6 +40,7 @@ if plugin:GetSetting("AssetIndicies") == nil then
 		assetIndicies,
 		"https://raw.githubusercontent.com/MrrowLabs/starlight/refs/heads/master/starlight.repo.json"
 	)
+	assetRegistry.update(assetIndicies)
 end
 
 -- tag pruning

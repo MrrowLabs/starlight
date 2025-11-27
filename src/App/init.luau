@@ -185,6 +185,7 @@ local function App(scope: types.AppScope, props: AppProps)
 		return filteredAssets
 	end)
 
+	local bulkDeleteMode = scope:Value(false)
 	local repoListVisible = scope:Value(false)
 	local createRepoModalOpen = scope:Value(false)
 	local editRepoModalOpen = scope:Value(false)
@@ -342,6 +343,7 @@ local function App(scope: types.AppScope, props: AppProps)
 												props.assetIndicies,
 												assetRepo.externalUri
 											)
+											assetRegistry.update(props.assetIndicies)
 										end,
 
 										[Children] = Child {

@@ -120,6 +120,8 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 							props.selectedAssetRepoValue:set(nil)
 
 							assetRegistry.deleteAssetRepo(props.assetIndicies, props.selectedAssetRepo.uid)
+
+							assetRegistry.update(props.assetIndicies)
 						end,
 
 						[Children] = scope:Border {

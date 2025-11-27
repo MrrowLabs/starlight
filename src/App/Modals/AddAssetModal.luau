@@ -143,6 +143,8 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 									)
 								end
 							end
+
+							assetRegistry.update(props.assetIndicies)
 						end,
 
 						[Children] = scope:Border {
