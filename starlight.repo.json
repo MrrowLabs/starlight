@@ -1,7 +1,19 @@
 {
   "uid": "mrrowlabs/starlight",
   "name": "Starlight",
-  "assets": [],
+  "assets": [
+    {
+      "type": "script",
+      "name": "Hello World",
+      "tags": [],
+      "inner": {
+        "source": "print(\"Hello world!\")\n",
+        "scriptType": "server"
+      },
+      "uid": "{82200f6b-4101-4a3f-b9fa-530f02c6e4b5}",
+      "credits": "metamethods"
+    }
+  ],
   "version": "0.0.1",
   "description": "The default repo that comes prepackaged with your install of Starlight!",
   "thumbnailUri": "rbxassetid://108513556336860",
