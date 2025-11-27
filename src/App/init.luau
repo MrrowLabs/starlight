@@ -321,9 +321,9 @@ local function App(scope: types.AppScope, props: AppProps)
 									scope:Button {
 										theme = props.theme,
 										backgroundColor = props.theme.bg,
-										text = "E",
 										size = UDim2.fromScale(1, 1),
 										automaticSize = Enum.AutomaticSize.None,
+										image = "rbxassetid://114692537431176",
 
 										onClick = function()
 											editRepoModalOpen:set(true)
@@ -344,9 +344,9 @@ local function App(scope: types.AppScope, props: AppProps)
 									scope:Button {
 										theme = props.theme,
 										backgroundColor = props.theme.bg,
-										text = "U",
 										size = UDim2.fromScale(1, 1),
 										automaticSize = Enum.AutomaticSize.None,
+										image = "rbxassetid://102891522636927",
 										visible = scope:Computed(function(use)
 											local selectedAssetRepo = use(selectedAssetRepo)
 											return selectedAssetRepo ~= nil and selectedAssetRepo.external
@@ -382,9 +382,9 @@ local function App(scope: types.AppScope, props: AppProps)
 							scope:Button {
 								theme = props.theme,
 								backgroundColor = props.theme.bg,
-								text = "R",
 								size = UDim2.fromScale(1, 1),
 								automaticSize = Enum.AutomaticSize.None,
+								image = "rbxassetid://122675518290439",
 
 								onClick = function()
 									repoListVisible:set(not peek(repoListVisible))
@@ -410,6 +410,7 @@ local function App(scope: types.AppScope, props: AppProps)
 								text = scope:Computed(function(use)
 									return if use(bulkDeleteMode) then "-" else "+"
 								end),
+								textSize = 24,
 								size = UDim2.fromScale(1, 1),
 								automaticSize = Enum.AutomaticSize.None,
 

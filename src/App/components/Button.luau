@@ -23,6 +23,8 @@ export type ButtonProps = {
 	fontWeight: Fusion.UsedAs<Enum.FontWeight>?,
 	textXAlignment: Fusion.UsedAs<Enum.TextXAlignment>?,
 	textYAlignment: Fusion.UsedAs<Enum.TextYAlignment>?,
+	image: Fusion.UsedAs<string>?,
+	imageColor: Theme.ThemeColor?,
 	onClick: (() -> ())?,
 	onMiddleClick: (() -> ())?,
 	onRightClick: (() -> ())?,
@@ -71,6 +73,16 @@ local function Button(scope: Fusion.Scope<typeof(Fusion)>, props: ButtonProps)
 				fontWeight = props.fontWeight,
 				textXAlignment = props.textXAlignment or Enum.TextXAlignment.Center,
 				textYAlignment = props.textYAlignment,
+			},
+
+			scope:New "ImageLabel" {
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, -12, 1, -12),
+				Position = UDim2.fromScale(0.5, 0.5),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+
+				Image = props.image,
+				ImageColor3 = props.imageColor or props.theme.text,
 			},
 
 			props[Children],

@@ -33,6 +33,19 @@ local assetIndices: Fusion.Value<types.AssetIndices> =
 		favorites = {},
 	})
 
+-- tag pruning
+for tag, assetUids in peek(assetIndices).assetTags do
+	if next(assetUids) ~= nil then
+		continue
+	end
+
+	peek(assetIndices).assetTags[tag] = nil
+end
+
+pluginScope:Observer(assetIndices):onChange(function()
+	plugin:SetSetting("AssetIndices ", peek(assetIndices))
+end)
+
 if plugin:GetSetting("AssetIndices ") == nil then
 	-- most likely a first install
 	print("installing default starlight repo...")
@@ -41,15 +54,6 @@ if plugin:GetSetting("AssetIndices ") == nil then
 		"https://raw.githubusercontent.com/MrrowLabs/starlight/refs/heads/master/starlight.repo.json"
 	)
 	assetRegistry.update(assetIndices)
-end
-
--- tag pruning
-for tag, assetUids in peek(assetIndices).assetTags do
-	if next(assetUids) ~= nil then
-		continue
-	end
-
-	peek(assetIndices).assetTags[tag] = nil
 end
 
 local rawSelection: Fusion.Value<{ Instance }> = pluginScope:Value(Selection:Get())
@@ -73,10 +77,6 @@ local selection: Fusion.Computed<{ Instance }> = pluginScope:Computed(function(u
 	end
 
 	return selection
-end)
-
-pluginScope:Observer(assetIndices):onChange(function()
-	plugin:SetSetting("AssetIndices ", peek(assetIndices))
 end)
 
 local appWidget = plugin:CreateDockWidgetPluginGui(
