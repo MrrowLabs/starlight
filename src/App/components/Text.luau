@@ -10,6 +10,7 @@ export type TextProps = {
 	position: Fusion.UsedAs<UDim2>?,
 	anchorPoint: Fusion.UsedAs<Vector2>?,
 	text: Fusion.UsedAs<string>?,
+	textTransparency: Fusion.UsedAs<number>?,
 	textWrapped: Fusion.UsedAs<boolean>?,
 	textSize: Fusion.UsedAs<number>?,
 	textColor: Theme.ThemeColor?,
@@ -32,6 +33,7 @@ local function Text(scope: Fusion.Scope<typeof(Fusion)>, props: TextProps)
 		Visible = props.visible,
 
 		Text = props.text or "",
+		TextTransparency = props.textTransparency,
 		TextWrapped = props.textWrapped or false,
 		RichText = true,
 		TextSize = props.textSize or 16,

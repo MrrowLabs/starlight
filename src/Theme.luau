@@ -69,10 +69,10 @@ local themePalettes: ThemePalettes = {
 		border_muted = Color3.fromHex("#31293f"),
 		primary = Color3.fromHex("#bba3e8"),
 		secondary = Color3.fromHex("#a9bb71"), -- TODO: replace color
-		red = Color3.fromHex("#bc938c"),
-		yellow = Color3.fromHex("#a5a07c"),
-		green = Color3.fromHex("#84a894"),
-		blue = Color3.fromHex("#8d9fbe"),
+		red = Color3.fromHex("#d68888"),
+		yellow = Color3.fromHex("#d3c87a"),
+		green = Color3.fromHex("#75c99b"),
+		blue = Color3.fromHex("#8fafe6"),
 	},
 
 	-- TODO: actually get light mode colors

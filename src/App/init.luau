@@ -206,6 +206,25 @@ local function App(scope: types.AppScope, props: AppProps)
 				ZIndex = 2,
 
 				[Children] = {
+					scope:New "Frame" {
+						BackgroundColor3 = props.theme.red,
+						BackgroundTransparency = 0.95,
+						Size = UDim2.fromScale(1, 1),
+						Visible = bulkDeleteMode,
+
+						[Children] = scope:Text {
+							theme = props.theme,
+							size = UDim2.fromScale(1, 1),
+							text = "BULK DELETE MODE",
+							textTransparency = 0.5,
+							textColor = props.theme.red,
+							textSize = 128,
+							textWrapped = true,
+							fontWeight = Enum.FontWeight.ExtraBold,
+							textXAlignment = Enum.TextXAlignment.Center,
+						},
+					},
+
 					scope:Modals {
 						theme = props.theme,
 						assetIndicies = props.assetIndicies,
@@ -388,11 +407,22 @@ local function App(scope: types.AppScope, props: AppProps)
 							scope:Button {
 								theme = props.theme,
 								backgroundColor = props.theme.bg,
-								text = "+",
+								text = scope:Computed(function(use)
+									return if use(bulkDeleteMode) then "-" else "+"
+								end),
 								size = UDim2.fromScale(1, 1),
 								automaticSize = Enum.AutomaticSize.None,
 
+								onRightClick = function()
+									bulkDeleteMode:set(not peek(bulkDeleteMode))
+								end,
+
 								onClick = function()
+									if peek(bulkDeleteMode) then
+										bulkDeleteMode:set(false)
+										return
+									end
+
 									addAssetModalOpen:set(true)
 								end,
 
@@ -538,6 +568,7 @@ local function App(scope: types.AppScope, props: AppProps)
 										rawSelection = props.rawSelection,
 										selectedAsset = selectedAsset,
 										assetDetailsModalOpen = assetDetailsModalOpen,
+										bulkDeleteMode = bulkDeleteMode,
 									},
 								},
 							},

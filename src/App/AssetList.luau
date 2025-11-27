@@ -23,6 +23,7 @@ type AssetListProps = {
 	rawSelection: Fusion.Value<{ Instance }>,
 	selectedAsset: Fusion.Value<types.Asset?>,
 	assetDetailsModalOpen: Fusion.Value<boolean>,
+	bulkDeleteMode: Fusion.Value<boolean>,
 }
 
 local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListProps)
@@ -77,12 +78,11 @@ local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListPr
 							Size = UDim2.fromOffset(80, 80),
 
 							[OnEvent "MouseButton1Click"] = function()
-								-- print(UserInputService:GetKeysPressed())
-								-- if UserInputService:IsKeyDown(Enum.KeyCode.Delete) then
-								-- 	assetRegistry.deleteAsset(props.assetIndicies, asset.uid)
-								-- 	assetRegistry.update(props.assetIndicies)
-								-- 	return
-								-- end
+								if peek(props.bulkDeleteMode) then
+									assetRegistry.deleteAsset(props.assetIndicies, asset.uid)
+									assetRegistry.update(props.assetIndicies)
+									return
+								end
 
 								props.selectedAsset:set(asset)
 								props.assetDetailsModalOpen:set(true)

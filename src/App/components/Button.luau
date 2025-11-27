@@ -24,6 +24,7 @@ export type ButtonProps = {
 	textXAlignment: Fusion.UsedAs<Enum.TextXAlignment>?,
 	textYAlignment: Fusion.UsedAs<Enum.TextYAlignment>?,
 	onClick: (() -> ())?,
+	onMiddleClick: (() -> ())?,
 	onRightClick: (() -> ())?,
 	[typeof(Children)]: Fusion.Child,
 }
