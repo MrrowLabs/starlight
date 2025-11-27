@@ -70,7 +70,7 @@ local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListPr
 						Wraps = true,
 					},
 
-					scope:ForValues(pageSlice, function(use, scope: typeof(scope), asset)
+					scope:ForValues(pageSlice, function(_, scope: typeof(scope), asset)
 						return scope:New "ImageButton" {
 							BackgroundColor3 = props.theme.bg,
 							Size = UDim2.fromOffset(80, 80),

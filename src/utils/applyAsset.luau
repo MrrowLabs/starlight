@@ -16,7 +16,7 @@ local function applyAsset(asset: types.Asset, selection: { Instance })
 					instance.FlipbookLayout = Enum.ParticleFlipbookLayout.Custom
 					instance.FlipbookSizeX = asset.inner.flipbook.sizeX
 					instance.FlipbookSizeY = asset.inner.flipbook.sizeY
-					instance.FlipbookMode = Enum.ParticleFlipbookMode:FromValue(asset.inner.flipbook.mode)
+					instance.FlipbookMode = (Enum.ParticleFlipbookMode):FromValue(asset.inner.flipbook.mode) -- () SILENTS THE SELENE ERROR LOL
 						or Enum.ParticleFlipbookMode.Loop
 					instance.FlipbookFramerate = serde.deserialize(asset.inner.flipbook.framerate)
 					instance.FlipbookStartRandom = asset.inner.flipbook.startRandom

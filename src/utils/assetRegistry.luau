@@ -199,11 +199,7 @@ function assetRegistry.addAssetToAssetRepo(
 	assetIndicies:set(peek(assetIndicies))
 end
 
-function assetRegistry.removeAssetFromRepo(
-	assetIndicies: Fusion.Value<types.AssetIndicies>,
-	assetUid: string,
-	assetRepoUid: string
-)
+function assetRegistry.removeAssetFromRepo(assetIndicies: Fusion.Value<types.AssetIndicies>, assetUid: string)
 	local asset = peek(assetIndicies).assets[assetUid]
 
 	assert(asset, `asset {assetUid} does not exist`)

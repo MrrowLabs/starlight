@@ -32,7 +32,7 @@ local function TagsRender(scope: Fusion.Scope<typeof(Fusion)>, props: TagsRender
 				Wraps = true,
 			},
 
-			scope:ForValues(props.tags, function(use, scope: typeof(scope), tag: string)
+			scope:ForValues(props.tags, function(_, scope: typeof(scope), tag: string)
 				return scope:New "Frame" {
 					BackgroundColor3 = props.backgroundColor or props.theme.bg_light,
 					AutomaticSize = Enum.AutomaticSize.XY,
