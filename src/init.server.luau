@@ -76,7 +76,6 @@ local selection: Fusion.Computed<{ Instance }> = pluginScope:Computed(function(u
 end)
 
 pluginScope:Observer(assetIndices):onChange(function()
-	print(peek(assetIndices))
 	plugin:SetSetting("AssetIndices ", peek(assetIndices))
 end)
 
