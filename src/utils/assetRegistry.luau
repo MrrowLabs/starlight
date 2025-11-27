@@ -85,10 +85,10 @@ function assetRegistry.addAssetFromInstance(
 		local instance = instance :: types.ScriptAssetInstanceTypes
 
 		assetRegistry.addAsset(assetIndicies, uid, "script", metadata, {
-			scriptType = if instance:IsA("Script")
-				then "server"
+			scriptType = if instance:IsA("LocalScript")
+				then "client"
 				elseif instance:IsA("ModuleScript") then "module"
-				else "client",
+				else "server",
 			source = instance.Source,
 		})
 	end

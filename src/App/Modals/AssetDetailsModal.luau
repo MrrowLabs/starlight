@@ -111,6 +111,8 @@ local function AssetDetailsModal(scope: types.AppScope, props: AssetDetailsModal
 							},
 
 							scope:AssetRender {
+								theme = props.theme,
+
 								asset = props.asset,
 
 								[Children] = scope:Border {

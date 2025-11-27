@@ -42,6 +42,18 @@ local function applyAsset(asset: types.Asset, selection: { Instance })
 					else serde.deserialize(asset.inner.color)
 			end
 		end
+	elseif asset.type == "script" then
+		local scriptInstance = Instance.new(
+			if asset.inner.scriptType == "server"
+				then "Script"
+				elseif asset.inner.scriptType == "module" then "ModuleScript"
+				else "LocalScript"
+		) :: Script
+		scriptInstance.Source = asset.inner.source
+
+		for _, instance in selection do
+			scriptInstance:Clone().Parent = instance
+		end
 	else
 		error(`unhandled asset type {asset.type}`)
 	end

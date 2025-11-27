@@ -97,6 +97,8 @@ local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListPr
 								},
 
 								scope:AssetRender {
+									theme = props.theme,
+
 									asset = asset,
 
 									[Children] = {

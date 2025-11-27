@@ -24,7 +24,7 @@ local function Border(scope: Fusion.Scope<typeof(Fusion)>, props: BorderProps)
 		},
 
 		scope:New "UICorner" {
-			CornerRadius = props.radius or UDim.new(0, 8),
+			CornerRadius = props.radius or UDim.new(0, 0),
 		},
 	}
 end

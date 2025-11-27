@@ -11,10 +11,10 @@ export type PaletteColor =
 	| "border_muted"
 	| "primary"
 	| "secondary"
-	| "danger"
-	| "warning"
-	| "success"
-	| "info"
+	| "red"
+	| "yellow"
+	| "green"
+	| "blue"
 
 export type ThemePalette = {
 	bg_dark: Color3,
@@ -27,10 +27,10 @@ export type ThemePalette = {
 	border_muted: Color3,
 	primary: Color3,
 	secondary: Color3,
-	danger: Color3,
-	warning: Color3,
-	success: Color3,
-	info: Color3,
+	red: Color3,
+	yellow: Color3,
+	green: Color3,
+	blue: Color3,
 }
 
 export type ThemeContext = {
@@ -44,10 +44,10 @@ export type ThemeContext = {
 	border_muted: Fusion.UsedAs<Color3>,
 	primary: Fusion.UsedAs<Color3>,
 	secondary: Fusion.UsedAs<Color3>,
-	danger: Fusion.UsedAs<Color3>,
-	warning: Fusion.UsedAs<Color3>,
-	success: Fusion.UsedAs<Color3>,
-	info: Fusion.UsedAs<Color3>,
+	red: Fusion.UsedAs<Color3>,
+	yellow: Fusion.UsedAs<Color3>,
+	green: Fusion.UsedAs<Color3>,
+	blue: Fusion.UsedAs<Color3>,
 }
 
 export type ThemeColor = Fusion.UsedAs<Color3>
@@ -69,10 +69,10 @@ local themePalettes: ThemePalettes = {
 		border_muted = Color3.fromHex("#31293f"),
 		primary = Color3.fromHex("#bba3e8"),
 		secondary = Color3.fromHex("#a9bb71"), -- TODO: replace color
-		danger = Color3.fromHex("#bc938c"),
-		warning = Color3.fromHex("#a5a07c"),
-		success = Color3.fromHex("#84a894"),
-		info = Color3.fromHex("#8d9fbe"),
+		red = Color3.fromHex("#bc938c"),
+		yellow = Color3.fromHex("#a5a07c"),
+		green = Color3.fromHex("#84a894"),
+		blue = Color3.fromHex("#8d9fbe"),
 	},
 
 	-- TODO: actually get light mode colors
@@ -87,10 +87,10 @@ local themePalettes: ThemePalettes = {
 		border_muted = Color3.fromHex("#a299b4"),
 		primary = Color3.fromHex("#503975"),
 		secondary = Color3.fromHex("#414f00"), -- TODO: replace color
-		danger = Color3.fromHex("#7d5952"),
-		warning = Color3.fromHex("#6a6443"),
-		success = Color3.fromHex("#4a6c59"),
-		info = Color3.fromHex("#536480"),
+		red = Color3.fromHex("#7d5952"),
+		yellow = Color3.fromHex("#6a6443"),
+		green = Color3.fromHex("#4a6c59"),
+		blue = Color3.fromHex("#536480"),
 	},
 }
 
@@ -143,17 +143,17 @@ local function Theme(scope: Fusion.Scope<typeof(Fusion)>): ThemeContext
 		secondary = scope:Computed(function(use)
 			return use(themePalette).secondary
 		end),
-		danger = scope:Computed(function(use)
-			return use(themePalette).danger
+		red = scope:Computed(function(use)
+			return use(themePalette).red
 		end),
-		warning = scope:Computed(function(use)
-			return use(themePalette).warning
+		yellow = scope:Computed(function(use)
+			return use(themePalette).yellow
 		end),
-		success = scope:Computed(function(use)
-			return use(themePalette).success
+		green = scope:Computed(function(use)
+			return use(themePalette).green
 		end),
-		info = scope:Computed(function(use)
-			return use(themePalette).info
+		blue = scope:Computed(function(use)
+			return use(themePalette).blue
 		end),
 	}
 end

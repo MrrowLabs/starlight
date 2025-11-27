@@ -1,6 +1,8 @@
 local Theme = require(script.Parent.Parent.Parent.Theme)
 local Fusion = require(script.Parent.Parent.Parent.packages.Fusion)
 
+local Children = Fusion.Children
+
 export type TextProps = {
 	theme: Theme.ThemeContext,
 	size: Fusion.UsedAs<UDim2>?,
@@ -15,6 +17,7 @@ export type TextProps = {
 	textXAlignment: Fusion.UsedAs<Enum.TextXAlignment>?,
 	textYAlignment: Fusion.UsedAs<Enum.TextYAlignment>?,
 	visible: Fusion.UsedAs<boolean>?,
+	[typeof(Children)]: Fusion.Child,
 }
 
 local function Text(scope: Fusion.Scope<typeof(Fusion)>, props: TextProps)
@@ -38,6 +41,8 @@ local function Text(scope: Fusion.Scope<typeof(Fusion)>, props: TextProps)
 		end),
 		TextXAlignment = props.textXAlignment or Enum.TextXAlignment.Left,
 		TextYAlignment = props.textYAlignment or Enum.TextYAlignment.Center,
+
+		[Children] = props[Children],
 	}
 end
 
