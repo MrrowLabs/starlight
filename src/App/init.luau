@@ -79,6 +79,8 @@ local function App(scope: types.AppScope, props: AppProps)
 		local matchTags = {}
 		local matchRepos = {}
 		local matchTypes = {}
+		local matchData: { [string]: string } = {}
+		local detailMatch: { string } = {}
 		local matchFavorite = false
 
 		for _, token in filterQueryTokens do
@@ -100,6 +102,12 @@ local function App(scope: types.AppScope, props: AppProps)
 				table.insert(matchRepos, assetRepoUid)
 			elseif token:match("^<type:") then
 				table.insert(matchTypes, token:sub(7, -2))
+			elseif token:match("^<is:") then
+				table.insert(detailMatch, token:sub(5, -2))
+			elseif token:match("^<.+:.*>") then
+				local key, value = token:gmatch("<(.+):(.*)>")()
+				assert(key and value, `key and or value is nil`)
+				matchData[key] = value
 			elseif token == "<favorite>" then
 				matchFavorite = true
 			end
@@ -125,7 +133,6 @@ local function App(scope: types.AppScope, props: AppProps)
 
 			local similar = true
 
-			-- name & tag matching
 			for _, token in filterQueryTokens do
 				-- ignore special tokens
 				if token:sub(1, 1) == "<" then
@@ -151,7 +158,6 @@ local function App(scope: types.AppScope, props: AppProps)
 				end
 			end
 
-			-- speical matches
 			for _, matchType in matchTypes do
 				if not asset.type:lower():match(matchType:lower()) then
 					similar = false
@@ -168,6 +174,38 @@ local function App(scope: types.AppScope, props: AppProps)
 
 			for _, matchRepoUid in matchRepos do
 				if not asset.assetRepo or asset.assetRepo:lower() ~= matchRepoUid:lower() then
+					similar = false
+					break
+				end
+			end
+
+			for _, detailType in detailMatch do
+				local detailType = detailType:lower()
+
+				if
+					detailType == "flipbook" and (asset.type ~= "texture" or not asset.inner.flipbook)
+					or detailType == "!flipbook" and (asset.type ~= "texture" or asset.inner.flipbook ~= nil)
+				then
+					similar = false
+					break
+				elseif detailType:match("%d+x%d+") then
+					local iter = detailType:gmatch("(%d+)x(%d+)")
+					local x, y = iter()
+					assert(x and y, `x and y value is nil`)
+
+					if
+						asset.type ~= "texture"
+						or not asset.inner.flipbook
+						or asset.inner.flipbook.sizeX ~= tonumber(x)
+						or asset.inner.flipbook.sizeY ~= tonumber(y)
+					then
+						similar = false
+					end
+				end
+			end
+
+			for matchKey, matchValue in matchData do
+				if not tostring(asset.inner[matchKey]):lower():match(matchValue:lower()) then
 					similar = false
 					break
 				end

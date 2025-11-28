@@ -4,6 +4,7 @@ local Fusion = require(script.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.types)
 local getAssetTypeFromInstance = require(script.Parent.getAssetTypeFromInstance)
 local serde = require(script.Parent.serde)
+local unwrapPcallOr = require(script.Parent.unwrapPcallOr)
 local values = require(script.Parent.values)
 
 local peek = Fusion.peek
@@ -75,7 +76,12 @@ function assetRegistry.addAssetFromInstance(
 				sizeY = FLIPBOOK_LAYOUT_CONVERSIONS[instance.FlipbookLayout] or instance.FlipbookSizeY,
 				startRandom = instance.FlipbookStartRandom,
 				textureSize = serde.serializeVector2(
-					AssetService:CreateEditableImageAsync(Content.fromUri(textureUri)).Size
+					unwrapPcallOr(
+						{ Size = Vector2.one * 200 },
+						AssetService.CreateEditableImage,
+						AssetService,
+						Content.fromUri(textureUri)
+					).Size
 				),
 			}
 			else nil
