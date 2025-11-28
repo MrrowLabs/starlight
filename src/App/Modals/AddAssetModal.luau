@@ -127,7 +127,7 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 
 							for _, instance in peek(props.selection) do
 								local assetUid = assetRegistry.addAssetFromInstance(props.assetIndices, {
-									name = if peek(isBulkImport) and not peek(name):match("^%s*$")
+									name = if peek(isBulkImport) and peek(name):match("^%s*$")
 										then instance.Name
 										else peek(name),
 									credits = peek(credits),
