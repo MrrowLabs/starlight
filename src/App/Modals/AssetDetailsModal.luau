@@ -91,6 +91,13 @@ local function AssetDetailsModal(scope: types.AppScope, props: AssetDetailsModal
 								visible = props.asset.assetRepo ~= nil,
 							},
 
+							scope:Text {
+								theme = props.theme,
+								text = `<b>uid:</b> {props.asset.uid}`,
+								textColor = props.theme.text_muted,
+								textWrapped = true,
+							},
+
 							scope:TagsRender {
 								theme = props.theme,
 								tags = props.asset.tags,

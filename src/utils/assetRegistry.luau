@@ -45,7 +45,7 @@ function assetRegistry.addAssetFromInstance(
 	metadata: AssetMetadata,
 	instance: Instance
 ): string
-	local uid = HttpService:GenerateGUID()
+	local uid = HttpService:GenerateGUID(false)
 
 	local assetType = getAssetTypeFromInstance(instance)
 	assert(assetType, `unknown asset for {instance}`)
