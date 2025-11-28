@@ -3,6 +3,7 @@ local HttpService = game:GetService("HttpService")
 local Fusion = require(script.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.types)
 local getAssetTypeFromInstance = require(script.Parent.getAssetTypeFromInstance)
+local json = require(script.Parent.json)
 local serde = require(script.Parent.serde)
 local unwrapPcallOr = require(script.Parent.unwrapPcallOr)
 local values = require(script.Parent.values)
@@ -359,7 +360,7 @@ function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.A
 		return
 	end
 
-	local assetRepoExport: types.AssetRepoExport = HttpService:JSONDecode(response)
+	local assetRepoExport: types.AssetRepoExport = json.decode(response)
 
 	-- TODO: probably validate the data
 

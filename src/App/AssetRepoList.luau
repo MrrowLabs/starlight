@@ -1,8 +1,12 @@
+local Selection = game:GetService("Selection")
 local Theme = require(script.Parent.Parent.Theme)
 local Fusion = require(script.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.types)
+local assetRegistry = require(script.Parent.Parent.utils.assetRegistry)
 local Border = require(script.Parent.components.Border)
 local Button = require(script.Parent.components.Button)
+
+local MAX_SLICE_SIZE = 199999
 
 local peek = Fusion.peek
 local Children = Fusion.Children
@@ -167,11 +171,35 @@ local function AssetRepoList(scope: types.AppScope, props: AssetRepoListProps)
 						text = "Export Repo",
 						selected = false,
 						onClick = function()
-							if not peek(props.selectedAssetRepo) then
+							local assetRepo = peek(props.selectedAssetRepo)
+
+							if not assetRepo then
 								return
 							end
 
-							props.exportRepoModalOpen:set(true)
+							local data = assetRegistry.exportAssetRepo(props.assetIndices, assetRepo.uid)
+							local slice = 0
+
+							while true do
+								local sliceData = data:sub(slice * MAX_SLICE_SIZE + 1, (slice + 1) * MAX_SLICE_SIZE)
+
+								if sliceData == "" then
+									break
+								end
+
+								local temp = Instance.new("Script")
+								temp.Source = sliceData
+								temp.Parent = workspace
+
+								Selection:Set({ temp })
+
+								print("prompting")
+								scope.plugin:PromptSaveSelection(`{assetRepo.name}_{slice}`)
+
+								temp:Destroy()
+
+								slice += 1
+							end
 						end,
 					},
 				},
