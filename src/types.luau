@@ -7,7 +7,7 @@ export type AppScope<T = {}> = Fusion.Scope<typeof(Fusion) & {
 	plugin: Plugin,
 } & T>
 
-export type AssetTypes = "texture" | "script"
+export type AssetTypes = "texture" | "script" | "mesh" | "audio"
 
 export type BaseAsset<T = any, I = any> = {
 	type: T,
@@ -45,9 +45,27 @@ export type ScriptAsset = BaseAsset<"script", ScriptAssetProps>
 
 export type ScriptAssetInstanceTypes = Script | ModuleScript | LocalScript
 
-export type AssetProps = TextureAssetProps | ScriptAssetProps
+export type MeshAssetProps = {
+	uri: string,
+	textureUri: string?,
+	size: number?,
+}
 
-export type Asset = TextureAsset | ScriptAsset
+export type MeshAsset = BaseAsset<"mesh", MeshAssetProps>
+
+export type MeshAssetInstanceTypes = MeshPart | SpecialMesh
+
+export type AudioAssetProps = {
+	uri: string,
+}
+
+export type AudioAsset = BaseAsset<"audio", AudioAssetProps>
+
+export type AudioAssetInstanceTypes = Sound
+
+export type AssetProps = TextureAssetProps | ScriptAssetProps | MeshAssetProps | AudioAssetProps
+
+export type Asset = TextureAsset | ScriptAsset | MeshAsset | AudioAsset
 
 export type AssetRepo = {
 	uid: string,

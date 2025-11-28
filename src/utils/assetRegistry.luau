@@ -95,6 +95,20 @@ function assetRegistry.addAssetFromInstance(
 				else "server",
 			source = instance.Source,
 		})
+	elseif assetType == "mesh" then
+		local instance = instance :: types.MeshAssetInstanceTypes
+
+		assetRegistry.addAsset(assetIndices, uid, "mesh", metadata, {
+			uri = instance.MeshId,
+			textureUri = if instance:IsA("MeshPart") then instance.TextureContent.Uri else instance.TextureId,
+			size = if instance:IsA("MeshPart") then instance.Size.Magnitude else nil,
+		})
+	elseif assetType == "audio" then
+		local instance = instance :: types.AudioAssetInstanceTypes
+
+		assetRegistry.addAsset(assetIndices, uid, "audio", metadata, {
+			uri = instance.SoundId,
+		})
 	end
 
 	return uid
