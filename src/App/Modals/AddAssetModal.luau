@@ -58,7 +58,7 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 					elseif #selection == 1 then
 						return `You are adding <b>{selection[1]:GetFullName()}</b>`
 					else
-						return `You are <b>bulk adding {#selection} items!</b> <i>Will be using each instance name instead of manual input</i>`
+						return `You are <b>bulk adding {#selection} items!</b> <i>Will be using each instance name instead of manual input (unless name field is filled in)</i>`
 					end
 				end),
 				textColor = props.theme.text_muted,
@@ -71,7 +71,6 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 				name = name,
 				credits = credits,
 				tags = tags,
-				nameFieldDisabled = isBulkImport,
 			},
 
 			scope:New "Frame" {
@@ -128,7 +127,9 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 
 							for _, instance in peek(props.selection) do
 								local assetUid = assetRegistry.addAssetFromInstance(props.assetIndices, {
-									name = if peek(isBulkImport) then instance.Name else peek(name),
+									name = if peek(isBulkImport) and not peek(name):match("^%s*$")
+										then instance.Name
+										else peek(name),
 									credits = peek(credits),
 								}, instance)
 
