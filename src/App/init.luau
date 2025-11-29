@@ -69,13 +69,17 @@ local function App(scope: types.AppScope, props: AppProps)
 	local selectedAssetRepo: Fusion.Value<types.AssetRepo?> = scope:Value(nil)
 	local selectedAsset: Fusion.Value<types.Asset?> = scope:Value(nil)
 
+	local filterStats: Fusion.Value<{ time: number, amount: number }?> = scope:Value(nil)
 	local filterQuery = scope:Value("")
 	-- TODO: probably DRY this whole thing out ngl
 	local lastFilteredAssets: { types.Asset } = nil
 	local persistLastFilteredAssets = false
 	local filteredAssets: Fusion.Computed<{ types.Asset }> = scope:Computed(function(use)
+		local timeStart = tick()
+
 		if persistLastFilteredAssets and lastFilteredAssets then
 			persistLastFilteredAssets = false
+			filterStats:set({ time = tick() - timeStart, amount = #lastFilteredAssets })
 			return lastFilteredAssets
 		end
 
@@ -91,17 +95,15 @@ local function App(scope: types.AppScope, props: AppProps)
 		local matchFavorite = false
 
 		for _, token in filterQueryTokens do
-			if token:match("^<tag:") then
+			if token:match("^<tag:.*>") then
 				local tag = token:sub(6, -2)
-
-				print(tag)
 
 				if not assetIndices.assetTags[tag] then
 					continue
 				end
 
 				table.insert(matchTags, tag)
-			elseif token:match("^<in:") then
+			elseif token:match("^<in:.*>") then
 				local assetRepoUid = token:sub(5, -2)
 
 				if not assetIndices.assetRepos[assetRepoUid] then
@@ -109,9 +111,9 @@ local function App(scope: types.AppScope, props: AppProps)
 				end
 
 				table.insert(matchRepos, assetRepoUid)
-			elseif token:match("^<type:") then
+			elseif token:match("^<type:.*>") then
 				table.insert(matchTypes, token:sub(7, -2))
-			elseif token:match("^<is:") then
+			elseif token:match("^<is:.*>") then
 				table.insert(detailMatch, token:sub(5, -2))
 			elseif token:match("^<.+:.*>") then
 				local key, value = token:gmatch("<(.+):(.*)>")()
@@ -236,6 +238,8 @@ local function App(scope: types.AppScope, props: AppProps)
 
 		persistLastFilteredAssets = false
 		lastFilteredAssets = filteredAssets
+
+		filterStats:set({ time = tick() - timeStart, amount = #lastFilteredAssets })
 
 		return filteredAssets
 	end)
@@ -615,6 +619,17 @@ local function App(scope: types.AppScope, props: AppProps)
 												Size = UDim2.new(1, 0, 0, 1),
 											},
 										},
+									},
+
+									scope:Text {
+										theme = props.theme,
+										text = scope:Computed(function(use)
+											local filterStats = use(filterStats)
+											return if filterStats
+												then `Processed in {filterStats.time}s, displaying {filterStats.amount} assets`
+												else ""
+										end),
+										textColor = props.theme.text_muted,
 									},
 
 									scope:AssetList {
