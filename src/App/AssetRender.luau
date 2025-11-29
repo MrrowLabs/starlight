@@ -29,8 +29,11 @@ local function TextureAssetRender(scope: Fusion.Scope<typeof(Fusion)>, props: Te
 
 		[Children] = Child {
 			scope:New "UIGradient" {
-				Color = if props.asset.inner.color.type == "color3"
-					then ColorSequence.new(serde.deserialize(props.asset.inner.color))
+				Color = if not props.asset.inner.color
+					then ColorSequence.new(Color3.new(1, 1, 1))
+					elseif props.asset.inner.color.type == "color3" then ColorSequence.new(
+						serde.deserialize(props.asset.inner.color)
+					)
 					else serde.deserialize(props.asset.inner.color),
 			},
 

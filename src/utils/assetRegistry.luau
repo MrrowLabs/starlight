@@ -89,7 +89,11 @@ function assetRegistry.addAssetFromInstance(
 
 		assetRegistry.addAsset(assetIndices, uid, "texture", metadata, {
 			uri = textureUri,
-			color = textureColor,
+			color = if textureColor.type == "color3" and serde.deserialize(textureColor) == Color3.new(1, 1, 1)
+					or textureColor.type == "color_sequence"
+						and serde.deserialize(textureColor) == ColorSequence.new(Color3.new(1, 1, 1))
+				then nil
+				else textureColor,
 			flipbook = flipbookData,
 		})
 	elseif assetType == "script" then
@@ -369,8 +373,6 @@ function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.A
 		externalUri = uri,
 		readonly = true,
 	})
-
-	print(peek(assetIndices).assets)
 end
 
 return assetRegistry

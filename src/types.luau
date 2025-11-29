@@ -21,7 +21,7 @@ export type BaseAsset<T = any, I = any> = {
 
 export type TextureAssetProps = {
 	uri: string,
-	color: serde.SerializedColor3 | serde.SerializedColorSequence,
+	color: (serde.SerializedColor3 | serde.SerializedColorSequence)?,
 	flipbook: {
 		mode: number,
 		framerate: serde.SerializedNumberRange,
