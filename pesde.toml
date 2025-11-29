@@ -1,5 +1,5 @@
 name = "mrrowlabs/starlight"
-version = "0.2.2"
+version = "0.2.3"
 description = "Quickly sift through a library of assets"
 authors = ["metamethods"]
 repository = "https://github.com/MrrowLabs/starlight"
