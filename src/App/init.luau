@@ -5,6 +5,7 @@ local types = require(script.Parent.types)
 local AssetRepoList = require(script.AssetRepoList)
 local AssetList = require(script.AssetList)
 local assetRegistry = require(script.Parent.utils.assetRegistry)
+local normalizeString = require(script.Parent.utils.normalizeString)
 local unique = require(script.Parent.utils.unique)
 local Border = require(script.components.Border)
 local Button = require(script.components.Button)
@@ -78,9 +79,7 @@ local function App(scope: types.AppScope, props: AppProps)
 			return lastFilteredAssets
 		end
 
-		local filterQueryTokens = unique(
-			tokenize((use(filterQuery):gsub("%%", "%%%%"):gsub("%[", "%%["):gsub("%]", "%%]"):gsub("%-", "%%-")))
-		)
+		local filterQueryTokens = unique(tokenize((use(filterQuery))))
 
 		local assetIndices = use(props.assetIndices)
 
@@ -94,6 +93,8 @@ local function App(scope: types.AppScope, props: AppProps)
 		for _, token in filterQueryTokens do
 			if token:match("^<tag:") then
 				local tag = token:sub(6, -2)
+
+				print(tag)
 
 				if not assetIndices.assetTags[tag] then
 					continue
@@ -115,7 +116,7 @@ local function App(scope: types.AppScope, props: AppProps)
 			elseif token:match("^<.+:.*>") then
 				local key, value = token:gmatch("<(.+):(.*)>")()
 				assert(key and value, `key and or value is nil`)
-				matchData[key] = value
+				matchData[key] = normalizeString(value)
 			elseif token == "<favorite>" then
 				matchFavorite = true
 			end
@@ -143,6 +144,8 @@ local function App(scope: types.AppScope, props: AppProps)
 			local similar = true
 
 			for _, token in filterQueryTokens do
+				local token = normalizeString(token)
+
 				-- ignore special tokens
 				if token:sub(1, 1) == "<" then
 					continue
@@ -168,7 +171,7 @@ local function App(scope: types.AppScope, props: AppProps)
 			end
 
 			for _, matchType in matchTypes do
-				if not asset.type:lower():match(matchType:lower()) then
+				if asset.type:lower() ~= matchType:lower() then
 					similar = false
 					break
 				end
