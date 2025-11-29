@@ -332,6 +332,7 @@ function assetRegistry.importAssetRepo(
 		assetUids = {},
 		external = false,
 		readonly = false,
+		conflicts = assetRepoExport.conflicts or {},
 	})
 
 	for _, asset in assetRepoExport.assets do
@@ -365,6 +366,15 @@ function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.A
 	end
 
 	local assetRepoExport: types.AssetRepoExport = json.decode(response)
+
+	for _, assetRepo in peek(assetIndices).assetRepos do
+		if assetRepo.conflicts and table.find(assetRepo.conflicts, assetRepoExport.uid) then
+			warn(
+				`{assetRepo.name} ({assetRepo.uid}) conflicts with {assetRepoExport.name} ({assetRepoExport.uid}). Please uninstall {assetRepo.name} if you wish to install {assetRepoExport.name}`
+			)
+			return
+		end
+	end
 
 	-- TODO: probably validate the data
 

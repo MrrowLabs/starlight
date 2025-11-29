@@ -1,7 +1,9 @@
 local Input = require(script.Parent.Input)
 local Theme = require(script.Parent.Parent.Parent.Theme)
 local Fusion = require(script.Parent.Parent.Parent.packages.Fusion)
+local TagsRender = require(script.Parent.Parent.TagsRender)
 
+local peek = Fusion.peek
 local Children = Fusion.Children
 
 type AssetRepoFormProps = {
@@ -12,12 +14,31 @@ type AssetRepoFormProps = {
 	thumbnailUri: Fusion.Value<string>,
 	credits: Fusion.Value<string>,
 	version: Fusion.Value<string>,
+	conflicts: Fusion.Value<{ string }>,
 }
 
 local function AssetRepoForm(scope: Fusion.Scope<typeof(Fusion)>, props: AssetRepoFormProps)
 	local scope = scope:deriveScope({
+		TagsRender = TagsRender,
 		Input = Input,
 	})
+
+	local rawConflicts = scope:Value(table.concat(peek(props.conflicts), ","))
+
+	scope:Observer(rawConflicts):onChange(function()
+		local newRawConflicts = peek(rawConflicts)
+		local conflicts = {}
+
+		for _, rawConflict in newRawConflicts:split(",") do
+			if rawConflict:match("^%s*$") then
+				continue
+			end
+
+			table.insert(conflicts, (rawConflict:gsub("^%s+", ""):gsub("%s+$", "")))
+		end
+
+		props.conflicts:set(conflicts)
+	end)
 
 	return scope:New "Frame" {
 		BackgroundTransparency = 1,
@@ -76,6 +97,19 @@ local function AssetRepoForm(scope: Fusion.Scope<typeof(Fusion)>, props: AssetRe
 				description = "Show off how far the repo have come. <i>Recommended to follow the semver format</i>",
 				input = props.version,
 				placeholder = "x.x.x",
+			},
+
+			scope:Input {
+				theme = props.theme,
+				title = "Repo Conflicts",
+				description = "Comma seperated list of all conflicting repos. <i>In the form of uid (username/name)</i>",
+				input = rawConflicts,
+				placeholder = "metamethods/starlight, starlight/metamethods, ...",
+			},
+
+			scope:TagsRender {
+				theme = props.theme,
+				tags = props.conflicts,
 			},
 		},
 	}

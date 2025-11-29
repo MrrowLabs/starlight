@@ -78,6 +78,7 @@ export type AssetRepo = {
 	external: boolean,
 	externalUri: string?,
 	readonly: boolean,
+	conflicts: { string }?,
 }
 
 export type AssetIndices = {
@@ -108,6 +109,7 @@ export type AssetRepoExport = {
 	version: string,
 	assets: { AssetExport },
 	readonly: boolean?,
+	conflicts: { string }?,
 }
 
 return {}

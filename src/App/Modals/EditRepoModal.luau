@@ -40,6 +40,7 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 	local thumbnailUri = scope:Value(props.selectedAssetRepo.thumbnailUri or "")
 	local credits = scope:Value(props.selectedAssetRepo.credits)
 	local repoVersion = scope:Value(props.selectedAssetRepo.version)
+	local conflicts = scope:Value(props.selectedAssetRepo.conflicts or {})
 
 	local deleteButtonClickedCount = scope:Value(0)
 
@@ -66,6 +67,7 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 					thumbnailUri = thumbnailUri,
 					credits = credits,
 					version = repoVersion,
+					conflicts = conflicts,
 				},
 			},
 

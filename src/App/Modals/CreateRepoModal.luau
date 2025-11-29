@@ -35,6 +35,7 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 	local thumbnailUri = scope:Value("")
 	local credits = scope:Value("")
 	local repoVersion = scope:Value("")
+	local conflicts = scope:Value({})
 
 	return scope:Modal {
 		theme = props.theme,
@@ -53,6 +54,7 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 				thumbnailUri = thumbnailUri,
 				credits = credits,
 				version = repoVersion,
+				conflicts = conflicts,
 			},
 
 			scope:New "Frame" {
@@ -113,6 +115,7 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 								credits = peek(credits),
 								version = peek(repoVersion),
 								assetUids = {},
+								conflicts = peek(conflicts),
 								external = false,
 								readonly = false,
 							})
