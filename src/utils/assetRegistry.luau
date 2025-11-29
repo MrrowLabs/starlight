@@ -371,7 +371,7 @@ function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.A
 	assetRegistry.importAssetRepo(assetIndices, assetRepoExport, {
 		external = true,
 		externalUri = uri,
-		readonly = true,
+		readonly = if assetRepoExport.readonly ~= nil then assetRepoExport.readonly else true,
 	})
 end
 

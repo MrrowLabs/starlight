@@ -78,8 +78,9 @@ local function App(scope: types.AppScope, props: AppProps)
 			return lastFilteredAssets
 		end
 
-		local filterQueryTokens =
-			unique(tokenize((use(filterQuery):gsub("%%", "%%%%"):gsub("%[", "%%["):gsub("%]", "%%]"))))
+		local filterQueryTokens = unique(
+			tokenize((use(filterQuery):gsub("%%", "%%%%"):gsub("%[", "%%["):gsub("%]", "%%]"):gsub("%-", "%%-")))
+		)
 
 		local assetIndices = use(props.assetIndices)
 

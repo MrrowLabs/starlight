@@ -107,6 +107,7 @@ export type AssetRepoExport = {
 	credits: string,
 	version: string,
 	assets: { AssetExport },
+	readonly: boolean?,
 }
 
 return {}
