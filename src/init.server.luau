@@ -6,6 +6,7 @@ local Fusion = require(script.packages.Fusion)
 local types = require(script.types)
 local assetRegistry = require(script.utils.assetRegistry)
 local getAssetTypeFromInstance = require(script.utils.getAssetTypeFromInstance)
+local json = require(script.utils.json)
 
 local scoped = Fusion.scoped
 local doCleanup = Fusion.doCleanup
@@ -17,21 +18,27 @@ local pluginScope = scoped(Fusion, {
 	plugin = plugin,
 })
 
+local savedAssetIndices = plugin:GetSetting("AssetIndices") :: (types.AssetIndices | string)?
+
+local assetIndices: Fusion.Value<types.AssetIndices> =
+	pluginScope:Value(if savedAssetIndices and typeof(savedAssetIndices) == "string"
+		then json.decode(savedAssetIndices)
+		else savedAssetIndices or {
+			assets = {},
+			assetUids = {},
+			assetRepos = {},
+			assetTags = {},
+			favorites = {},
+		})
+
 table.insert(
 	pluginScope,
 	plugin.Unloading:Connect(function()
+		print("saving assets...")
+		plugin:SetSetting("AssetIndices", json.encode(peek(assetIndices)))
 		doCleanup(pluginScope)
 	end)
 )
-
-local assetIndices: Fusion.Value<types.AssetIndices> =
-	pluginScope:Value(plugin:GetSetting("AssetIndices") :: types.AssetIndices? or {
-		assets = {},
-		assetUids = {},
-		assetRepos = {},
-		assetTags = {},
-		favorites = {},
-	})
 
 -- tag pruning
 for tag, assetUids in peek(assetIndices).assetTags do
@@ -42,8 +49,14 @@ for tag, assetUids in peek(assetIndices).assetTags do
 	peek(assetIndices).assetTags[tag] = nil
 end
 
+-- TODO: most likely wait a bit until actually saving, could be causing a LOT of lag
+
 pluginScope:Observer(assetIndices):onChange(function()
-	plugin:SetSetting("AssetIndices", peek(assetIndices))
+	-- plugin:SetSetting("AssetIndices", json.encode(peek(assetIndices)))
+	-- task.spawn(plugin.SetSetting, plugin, "AssetIndicies", json.encode(peek(assetIndices)))
+	-- task.spawn(function()
+	-- 	plugin:SetSetting("AssetIndices", json.encode(peek(assetIndices)))
+	-- end)
 end)
 
 if plugin:GetSetting("AssetIndices") == nil then

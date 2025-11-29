@@ -21,7 +21,7 @@ local FLIPBOOK_LAYOUT_CONVERSIONS = {
 type AssetMetadata = { name: string, credits: string }
 
 function assetRegistry.update(assetIndices: Fusion.Value<types.AssetIndices>)
-	assetIndices:set(peek(assetIndices))
+	assetIndices:set(peek(assetIndices), true)
 end
 
 function assetRegistry.getAsset(assetIndices: Fusion.Value<types.AssetIndices>, assetUid: string): types.Asset?
@@ -298,7 +298,7 @@ function assetRegistry.exportAssetRepo(assetIndices: Fusion.Value<types.AssetInd
 		table.insert(assetRepoExport.assets, assetRegistry.exportAsset(assetIndices, assetUid))
 	end
 
-	return HttpService:JSONEncode(assetRepoExport)
+	return json.encode(assetRepoExport)
 end
 
 type ImportAssetRepoExtra = {
@@ -369,6 +369,8 @@ function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.A
 		externalUri = uri,
 		readonly = true,
 	})
+
+	print(peek(assetIndices).assets)
 end
 
 return assetRegistry

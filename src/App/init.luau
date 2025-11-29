@@ -70,7 +70,14 @@ local function App(scope: types.AppScope, props: AppProps)
 
 	local filterQuery = scope:Value("")
 	-- TODO: probably DRY this whole thing out ngl
+	local lastFilteredAssets: { types.Asset } = nil
+	local persistLastFilteredAssets = false
 	local filteredAssets: Fusion.Computed<{ types.Asset }> = scope:Computed(function(use)
+		if persistLastFilteredAssets and lastFilteredAssets then
+			persistLastFilteredAssets = false
+			return lastFilteredAssets
+		end
+
 		local filterQueryTokens =
 			unique(tokenize((use(filterQuery):gsub("%%", "%%%%"):gsub("%[", "%%["):gsub("%]", "%%]"))))
 
@@ -128,6 +135,7 @@ local function App(scope: types.AppScope, props: AppProps)
 
 			if #filterQueryTokens == 0 then
 				table.insert(filteredAssets, asset)
+				-- filteredAssets[asset.uid] = asset
 				continue
 			end
 
@@ -200,6 +208,7 @@ local function App(scope: types.AppScope, props: AppProps)
 						or asset.inner.flipbook.sizeY ~= tonumber(y)
 					then
 						similar = false
+						break
 					end
 				end
 			end
@@ -217,8 +226,12 @@ local function App(scope: types.AppScope, props: AppProps)
 
 			if similar then
 				table.insert(filteredAssets, asset)
+				-- filteredAssets[asset.uid] = asset
 			end
 		end
+
+		persistLastFilteredAssets = false
+		lastFilteredAssets = filteredAssets
 
 		return filteredAssets
 	end)
@@ -608,6 +621,16 @@ local function App(scope: types.AppScope, props: AppProps)
 										selectedAsset = selectedAsset,
 										assetDetailsModalOpen = assetDetailsModalOpen,
 										bulkDeleteMode = bulkDeleteMode,
+										onBulkDelete = function(asset)
+											if not lastFilteredAssets then
+												return
+											end
+
+											table.remove(lastFilteredAssets, table.find(lastFilteredAssets, asset))
+											lastFilteredAssets = lastFilteredAssets
+											persistLastFilteredAssets = true
+											filteredAssets:_evaluate()
+										end,
 									},
 								},
 							},

@@ -24,6 +24,7 @@ type AssetListProps = {
 	selectedAsset: Fusion.Value<types.Asset?>,
 	assetDetailsModalOpen: Fusion.Value<boolean>,
 	bulkDeleteMode: Fusion.Value<boolean>,
+	onBulkDelete: ((asset: types.Asset) -> ())?,
 }
 
 local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListProps)
@@ -80,6 +81,9 @@ local function AssetList(scope: Fusion.Scope<typeof(Fusion)>, props: AssetListPr
 							[OnEvent "MouseButton1Click"] = function()
 								if peek(props.bulkDeleteMode) then
 									assetRegistry.deleteAsset(props.assetIndices, asset.uid)
+									if props.onBulkDelete then
+										props.onBulkDelete(asset)
+									end
 									assetRegistry.update(props.assetIndices)
 									return
 								end
