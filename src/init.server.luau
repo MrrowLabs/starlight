@@ -58,7 +58,7 @@ if plugin:GetSetting("AssetIndices") == nil then
 	print("installing default starlight repo...")
 	assetRegistry.importAssetRepoFromUri(
 		assetIndices,
-		"https://raw.githubusercontent.com/MrrowLabs/starlight-megarepo/refs/heads/main/starlight.repo.json"
+		"https://raw.githubusercontent.com/MrrowLabs/starlight-megarepo/refs/heads/main/starlight.megarepo.json"
 	)
 	assetRegistry.update(assetIndices)
 end
