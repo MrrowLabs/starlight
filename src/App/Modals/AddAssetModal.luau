@@ -117,9 +117,7 @@ local function AddAssetModal(scope: Fusion.Scope<typeof(Fusion)>, props: AddAsse
 						end),
 
 						onClick = function()
-							if
-								(peek(name):match("^%s*$") and not peek(isBulkImport)) or peek(credits):match("^%s*$")
-							then
+							if peek(name):match("^%s*$") and not peek(isBulkImport) then
 								return
 							end
 
