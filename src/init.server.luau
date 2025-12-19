@@ -50,13 +50,8 @@ end
 
 -- TODO: most likely wait a bit until actually saving, could be causing a LOT of lag
 
-pluginScope:Observer(assetIndices):onChange(function()
-	-- plugin:SetSetting("AssetIndices", json.encode(peek(assetIndices)))
-	-- task.spawn(plugin.SetSetting, plugin, "AssetIndicies", json.encode(peek(assetIndices)))
-	-- task.spawn(function()
-	-- 	plugin:SetSetting("AssetIndices", json.encode(peek(assetIndices)))
-	-- end)
-end)
+-- pluginScope:Observer(assetIndices):onChange(function()
+-- end)
 
 if plugin:GetSetting("AssetIndices") == nil then
 	-- most likely a first install
@@ -91,7 +86,9 @@ local selection: Fusion.Computed<{ Instance }> = pluginScope:Computed(function(u
 	return selection
 end)
 
-local appWidget = plugin:CreateDockWidgetPluginGuiAsync(
+-- thanks luau lsp for not knowing that CreateDockWidgetPluginAsync exists
+-- yet tell me that CreateDockWidgetPluginGui is deprecated
+local appWidget = (plugin :: any):CreateDockWidgetPluginGuiAsync(
 	constants.PLUGIN_ID,
 	DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 270, 360, 270, 360)
 )

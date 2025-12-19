@@ -10,6 +10,7 @@ local TagsRender = require(script.Parent.Parent.TagsRender)
 local Border = require(script.Parent.Parent.components.Border)
 local Button = require(script.Parent.Parent.components.Button)
 local Text = require(script.Parent.Parent.components.Text)
+local TextBox = require(script.Parent.Parent.components.TextBox)
 
 local peek = Fusion.peek
 local Children = Fusion.Children
@@ -32,6 +33,7 @@ local function AssetDetailsModal(scope: types.AppScope, props: AssetDetailsModal
 		Modal = Modal,
 		Input = Input,
 		Button = Button,
+		TextBox = TextBox,
 		Text = Text,
 		Border = Border,
 	})
@@ -81,6 +83,7 @@ local function AssetDetailsModal(scope: types.AppScope, props: AssetDetailsModal
 								text = `<b>by:</b> {props.asset.credits}`,
 								textColor = props.theme.text_muted,
 								textWrapped = true,
+								visible = props.asset.credits:match("^%s*$") == nil,
 							},
 
 							scope:Text {
