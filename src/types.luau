@@ -68,8 +68,9 @@ export type AssetProps = TextureAssetProps | ScriptAssetProps | MeshAssetProps |
 export type Asset = TextureAsset | ScriptAsset | MeshAsset | AudioAsset
 
 export type AssetRepo = {
-	uid: string,
-	name: string, -- most likely in the form of username/name (like a repo)
+	uid: string, -- most likely in the form of username/name (like a repo)
+	name: string,
+	nameThumbnailUri: string?,
 	description: string,
 	thumbnailUri: string?,
 	credits: string,
@@ -108,6 +109,9 @@ export type AssetRepoExport = {
 	credits: string,
 	version: string,
 	assets: { AssetExport },
+	-- megarepo stuff; import from other asset repo assets to this
+	-- one allowing to consolidate a collection of assets useful for xyz reason
+	externalAssetRepoUris: { string }?,
 	readonly: boolean?,
 	conflicts: { string }?,
 }

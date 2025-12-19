@@ -10,6 +10,7 @@ type AssetRepoFormProps = {
 	theme: Theme.ThemeContext,
 	uid: Fusion.Value<string>,
 	name: Fusion.Value<string>,
+	nameThumbnailUri: Fusion.Value<string>,
 	description: Fusion.Value<string>,
 	thumbnailUri: Fusion.Value<string>,
 	credits: Fusion.Value<string>,
@@ -65,6 +66,14 @@ local function AssetRepoForm(scope: Fusion.Scope<typeof(Fusion)>, props: AssetRe
 				description = "Create a unique name for your asset repo! <i>This does support rich text by the way</i>",
 				input = props.name,
 				placeholder = "My really cool repo",
+			},
+
+			scope:Input {
+				theme = props.theme,
+				title = "Name Thumbnail Uri",
+				description = "Give your repo a more <i>stylish</i> look",
+				input = props.nameThumbnailUri,
+				placeholder = "rbxassetid://68",
 			},
 
 			scope:Input {

@@ -1,3 +1,4 @@
+local RemoteCursorService = game:GetService("RemoteCursorService")
 local AssetRepoForm = require(script.Parent.AssetRepoForm)
 local Input = require(script.Parent.Input)
 local Modal = require(script.Parent.Parent.Modal)
@@ -36,6 +37,7 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 
 	local uid = scope:Value(props.selectedAssetRepo.uid)
 	local name = scope:Value(props.selectedAssetRepo.name)
+	local nameThumbnailUri = scope:Value(props.selectedAssetRepo.nameThumbnailUri or "")
 	local description = scope:Value(props.selectedAssetRepo.description)
 	local thumbnailUri = scope:Value(props.selectedAssetRepo.thumbnailUri or "")
 	local credits = scope:Value(props.selectedAssetRepo.credits)
@@ -63,6 +65,7 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 					theme = props.theme,
 					uid = uid,
 					name = name,
+					nameThumbnailUri = nameThumbnailUri,
 					description = description,
 					thumbnailUri = thumbnailUri,
 					credits = credits,
@@ -163,9 +166,11 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 					end
 
 					local assetRepo = assetInidicies.assetRepos[peek(uid)]
+					local nameThumbnailUri = peek(nameThumbnailUri)
 
 					assetRepo.uid = peek(uid)
 					assetRepo.name = peek(name)
+					assetRepo.nameThumbnailUri = if not nameThumbnailUri:match("^%s*$") then nameThumbnailUri else nil
 					assetRepo.description = peek(description)
 					assetRepo.thumbnailUri = peek(thumbnailUri)
 					assetRepo.credits = peek(credits)

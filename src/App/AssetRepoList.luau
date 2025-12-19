@@ -15,6 +15,7 @@ local Child = Fusion.Child
 type AssetRepoButtonProps = {
 	theme: Theme.ThemeContext,
 	text: Fusion.UsedAs<string>,
+	thumbnailUri: Fusion.UsedAs<string?>,
 	selected: Fusion.UsedAs<boolean>,
 	onClick: () -> (),
 }
@@ -32,16 +33,32 @@ local function AssetRepoButton(scope: Fusion.Scope<typeof(Fusion)>, props: Asset
 		backgroundColor = scope:Computed(function(use)
 			return if use(props.selected) then use(props.theme.primary) else use(props.theme.bg_light)
 		end),
-		text = props.text,
+		text = scope:Computed(function(use)
+			return if use(props.thumbnailUri) then "" else use(props.text)
+		end),
 		textColor = scope:Computed(function(use)
 			return if use(props.selected) then use(props.theme.bg) else use(props.theme.text)
 		end),
 		onClick = props.onClick,
 
-		[Children] = {
+		[Children] = Child {
 			scope:Border {
 				theme = props.theme,
 				radius = UDim.new(0, 6),
+			},
+
+			scope:New "ImageLabel" {
+				BackgroundTransparency = 1,
+				Size = UDim2.fromScale(1, 1),
+
+				Image = scope:Computed(function(use)
+					return use(props.thumbnailUri) or ""
+				end),
+				ScaleType = Enum.ScaleType.Fit,
+
+				Visible = scope:Computed(function(use)
+					return use(props.thumbnailUri) ~= nil
+				end),
 			},
 		},
 	}
@@ -95,6 +112,7 @@ local function AssetRepoList(scope: types.AppScope, props: AssetRepoListProps)
 					scope:AssetRepoButton {
 						theme = props.theme,
 						text = "All",
+
 						selected = scope:Computed(function(use)
 							return use(props.selectedAssetRepo) == nil
 						end),
@@ -128,6 +146,7 @@ local function AssetRepoList(scope: types.AppScope, props: AssetRepoListProps)
 										scope:AssetRepoButton {
 											theme = props.theme,
 											text = assetRepo.name,
+											thumbnailUri = assetRepo.nameThumbnailUri,
 											selected = scope:Computed(function(use)
 												return use(props.selectedAssetRepo) == assetRepo
 											end),

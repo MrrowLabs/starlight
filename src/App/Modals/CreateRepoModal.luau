@@ -31,6 +31,7 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 
 	local uid = scope:Value("")
 	local name = scope:Value("")
+	local nameThumbnailUri = scope:Value("")
 	local description = scope:Value("")
 	local thumbnailUri = scope:Value("")
 	local credits = scope:Value("")
@@ -50,6 +51,7 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 				theme = props.theme,
 				uid = uid,
 				name = name,
+				nameThumbnailUri = nameThumbnailUri,
 				description = description,
 				thumbnailUri = thumbnailUri,
 				credits = credits,
@@ -107,9 +109,14 @@ local function CreateRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: Creat
 
 							props.createRepoModalOpen:set(false)
 
+							local nameThumbnailUri = peek(nameThumbnailUri)
+
 							assetRegistry.addRepo(props.assetIndices, peek(uid), {
 								uid = peek(uid),
 								name = peek(name),
+								nameThumbnailUri = if not nameThumbnailUri:match("^%s*$")
+									then nameThumbnailUri
+									else nil,
 								description = peek(description),
 								thumbnailUri = peek(thumbnailUri),
 								credits = peek(credits),
