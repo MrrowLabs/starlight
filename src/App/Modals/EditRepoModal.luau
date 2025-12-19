@@ -1,4 +1,3 @@
-local RemoteCursorService = game:GetService("RemoteCursorService")
 local AssetRepoForm = require(script.Parent.AssetRepoForm)
 local Input = require(script.Parent.Input)
 local Modal = require(script.Parent.Parent.Modal)
