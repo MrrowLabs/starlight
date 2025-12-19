@@ -305,6 +305,22 @@ function assetRegistry.exportAssetRepo(assetIndices: Fusion.Value<types.AssetInd
 	return json.encode(assetRepoExport)
 end
 
+function assetRegistry.getAssetExportsFromExternalAssetRepoUris(
+	externalAssetRepoUris: { string }
+): { types.AssetExport }
+	local assetExports = {}
+
+	for _, externalAssetRepoUri in externalAssetRepoUris do
+		local assetRepoExport = assetRegistry.loadAssetRepoDataFromUri(externalAssetRepoUri)
+
+		for _, assetExport in assetRepoExport.assets do
+			table.insert(assetExports, assetExport)
+		end
+	end
+
+	return assetExports
+end
+
 type ImportAssetRepoExtra = {
 	external: boolean?,
 	externalUri: string?,
@@ -335,13 +351,25 @@ function assetRegistry.importAssetRepo(
 		conflicts = assetRepoExport.conflicts or {},
 	})
 
-	for _, asset in assetRepoExport.assets do
-		assetRegistry.addAsset(assetIndices, asset.uid, asset.type, {
-			credits = asset.credits,
-			name = asset.name,
-		}, asset.inner)
-		assetRegistry.addTags(assetIndices, asset.uid, table.unpack(values(asset.tags)))
-		assetRegistry.addAssetToAssetRepo(assetIndices, asset.uid, assetRepoExport.uid)
+	local importAssetExport = function(assetExport: types.AssetExport)
+		assetRegistry.addAsset(assetIndices, assetExport.uid, assetExport.type, {
+			credits = assetExport.credits,
+			name = assetExport.name,
+		}, assetExport.inner)
+		assetRegistry.addTags(assetIndices, assetExport.uid, table.unpack(values(assetExport.tags)))
+		assetRegistry.addAssetToAssetRepo(assetIndices, assetExport.uid, assetRepoExport.uid)
+	end
+
+	for _, assetExport in assetRepoExport.assets do
+		importAssetExport(assetExport)
+	end
+
+	if assetRepoExport.externalAssetRepoUris then
+		for _, externalAssetExport in
+			assetRegistry.getAssetExportsFromExternalAssetRepoUris(assetRepoExport.externalAssetRepoUris)
+		do
+			importAssetExport(externalAssetExport)
+		end
 	end
 
 	local assetRepo = assetRegistry.getAssetRepo(assetIndices, assetRepoExport.uid)
@@ -357,15 +385,15 @@ function assetRegistry.importAssetRepo(
 	end
 end
 
-function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.AssetIndices>, uri: string)
+function assetRegistry.loadAssetRepoDataFromUri(uri: string): types.AssetRepoExport
 	local ok, response = pcall(HttpService.GetAsync, HttpService, uri)
+	assert(ok, `failed to import asset repo data from {uri}`)
 
-	if not ok then
-		warn(`Failed to import asset repo from {uri}`)
-		return
-	end
+	return json.decode(response)
+end
 
-	local assetRepoExport: types.AssetRepoExport = json.decode(response)
+function assetRegistry.importAssetRepoFromUri(assetIndices: Fusion.Value<types.AssetIndices>, uri: string)
+	local assetRepoExport: types.AssetRepoExport = assetRegistry.loadAssetRepoDataFromUri(uri)
 
 	for _, assetRepo in peek(assetIndices).assetRepos do
 		if assetRepo.conflicts and table.find(assetRepo.conflicts, assetRepoExport.uid) then
