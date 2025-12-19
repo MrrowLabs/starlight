@@ -8,14 +8,27 @@ local currentCamera = workspace.CurrentCamera
 
 local function applyAsset(asset: types.Asset, selection: { Instance })
 	if asset.type == "texture" then
-		local assetColor: Color3 | ColorSequence = if asset.inner.color
+		local assetColor: (Color3 | ColorSequence)? = if asset.inner.color
 			then serde.deserialize(asset.inner.color)
-			else Color3.new(1, 1, 1)
+			else nil
 
 		for _, instance in selection do
 			if instance:IsA("ParticleEmitter") then
 				instance.Texture = asset.inner.uri
-				instance.Color = if typeof(assetColor) == "Color3" then ColorSequence.new(assetColor) else assetColor
+				if
+					assetColor
+					and (
+						(typeof(instance.Color) == "Color3" and instance.Color == Color3.new(1, 1, 1))
+						or (
+							typeof(instance.Color) == "ColorSequence"
+							and averageColorSequence(instance.Color) == Color3.new(1, 1, 1)
+						)
+					)
+				then
+					instance.Color = if typeof(assetColor) == "Color3"
+						then ColorSequence.new(assetColor)
+						else assetColor
+				end
 
 				if asset.inner.flipbook then
 					instance.FlipbookLayout = Enum.ParticleFlipbookLayout.Custom
@@ -28,21 +41,38 @@ local function applyAsset(asset: types.Asset, selection: { Instance })
 				end
 			elseif instance:IsA("Beam") then
 				instance.Texture = asset.inner.uri
-				instance.Color = if typeof(assetColor) == "Color3" then ColorSequence.new(assetColor) else assetColor
+				if
+					assetColor
+					and (
+						(typeof(instance.Color) == "Color3" and instance.Color == Color3.new(1, 1, 1))
+						or (
+							typeof(instance.Color) == "ColorSequence"
+							and averageColorSequence(instance.Color) == Color3.new(1, 1, 1)
+						)
+					)
+				then
+					instance.Color = if typeof(assetColor) == "Color3"
+						then ColorSequence.new(assetColor)
+						else assetColor
+				end
 			elseif instance:IsA("Decal") or instance:IsA("Texture") then
 				-- luau lsp is going crazy??
 				local instance: Decal = instance
 				instance.Texture = asset.inner.uri
-				instance.Color3 = if typeof(assetColor) == "ColorSequence"
-					then averageColorSequence(assetColor)
-					else assetColor
+				if assetColor and instance.Color3 == Color3.new(1, 1, 1) then
+					instance.Color3 = if typeof(assetColor) == "ColorSequence"
+						then averageColorSequence(assetColor)
+						else assetColor
+				end
 			elseif instance:IsA("ImageLabel") or instance:IsA("ImageButton") then
 				-- TODO: probably report this as a bug on the luau lsp repo or smh
 				local instance = instance :: ImageLabel
 				instance.Image = asset.inner.uri
-				instance.ImageColor3 = if typeof(assetColor) == "ColorSequence"
-					then averageColorSequence(assetColor)
-					else assetColor
+				if assetColor and instance.ImageColor3 == Color3.new(1, 1, 1) then
+					instance.ImageColor3 = if typeof(assetColor) == "ColorSequence"
+						then averageColorSequence(assetColor)
+						else assetColor
+				end
 			end
 		end
 	elseif asset.type == "script" then
