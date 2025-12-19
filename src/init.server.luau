@@ -91,7 +91,7 @@ local selection: Fusion.Computed<{ Instance }> = pluginScope:Computed(function(u
 	return selection
 end)
 
-local appWidget = plugin:CreateDockWidgetPluginGui(
+local appWidget = plugin:CreateDockWidgetPluginGuiAsync(
 	constants.PLUGIN_ID,
 	DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 270, 360, 270, 360)
 )

@@ -6,7 +6,7 @@ repository = "https://github.com/MrrowLabs/starlight"
 license = "MIT"
 
 [target]
-environment = "roblox"
+environment = "luau"
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
@@ -24,6 +24,7 @@ rojo = { name = "pesde/rojo", version = "^7.5.1", target = "lune" }
 
 [dependencies]
 Fusion = { wally = "wally#elttob/fusion", version = "^0.3.0" }
+semver = { name = "0x5eal/semver", version = "^0.1.1" }
 
 [engines]
 pesde = "^0.7.0"
