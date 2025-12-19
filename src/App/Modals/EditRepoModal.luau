@@ -174,6 +174,7 @@ local function EditRepoModal(scope: Fusion.Scope<typeof(Fusion)>, props: EditRep
 					assetRepo.thumbnailUri = peek(thumbnailUri)
 					assetRepo.credits = peek(credits)
 					assetRepo.version = peek(repoVersion)
+					assetRepo.conflicts = peek(conflicts)
 
 					for _, assetUid in assetRepo.assetUids do
 						local asset = assetInidicies.assets[assetUid]
