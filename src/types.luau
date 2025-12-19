@@ -104,6 +104,7 @@ export type AssetExport = {
 export type AssetRepoExport = {
 	uid: string,
 	name: string,
+	nameThumbnailUri: string?,
 	description: string,
 	thumbnailUri: string?,
 	credits: string,

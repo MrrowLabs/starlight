@@ -289,6 +289,7 @@ function assetRegistry.exportAssetRepo(assetIndices: Fusion.Value<types.AssetInd
 	local assetRepoExport: types.AssetRepoExport = {
 		uid = assetRepo.uid,
 		name = assetRepo.name,
+		nameThumbnailUri = assetRepo.nameThumbnailUri,
 		description = assetRepo.description,
 		thumbnailUri = assetRepo.thumbnailUri,
 		credits = assetRepo.credits,
@@ -341,6 +342,7 @@ function assetRegistry.importAssetRepo(
 	assetRegistry.addRepo(assetIndices, assetRepoExport.uid, {
 		uid = assetRepoExport.uid,
 		name = assetRepoExport.name,
+		nameThumbnailUri = assetRepoExport.nameThumbnailUri,
 		description = assetRepoExport.description,
 		thumbnailUri = assetRepoExport.thumbnailUri,
 		credits = assetRepoExport.credits,
