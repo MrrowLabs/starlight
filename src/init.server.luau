@@ -34,7 +34,6 @@ local assetIndices: Fusion.Value<types.AssetIndices> =
 table.insert(
 	pluginScope,
 	plugin.Unloading:Connect(function()
-		print("saving assets...")
 		plugin:SetSetting("AssetIndices", json.encode(peek(assetIndices)))
 		doCleanup(pluginScope)
 	end)
