@@ -295,6 +295,7 @@ function assetRegistry.exportAssetRepo(assetIndices: Fusion.Value<types.AssetInd
 		credits = assetRepo.credits,
 		version = assetRepo.version,
 		assets = {},
+		conflicts = assetRepo.conflicts,
 	}
 
 	for _, assetUid in assetRepo.assetUids do
