@@ -78,8 +78,8 @@ function assetRegistry.addAssetFromInstance(
 				startRandom = instance.FlipbookStartRandom,
 				textureSize = serde.serializeVector2(
 					unwrapPcallOr(
-						{ Size = Vector2.one * 200 },
-						AssetService.CreateEditableImage,
+						{ Size = Vector2.one * 1024 },
+						AssetService.CreateEditableImageAsync,
 						AssetService,
 						Content.fromUri(textureUri)
 					).Size
