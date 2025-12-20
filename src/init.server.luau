@@ -1,4 +1,6 @@
 local Selection = game:GetService("Selection")
+local RunService = game:GetService("RunService")
+if not RunService:IsEdit() then return end
 local App = require(script.App)
 local Theme = require(script.Theme)
 local constants = require(script.constants)
