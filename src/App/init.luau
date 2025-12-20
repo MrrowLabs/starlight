@@ -625,9 +625,10 @@ local function App(scope: types.AppScope, props: AppProps)
 										theme = props.theme,
 										text = scope:Computed(function(use)
 											local filterStats = use(filterStats)
-											return if filterStats
-												then `Processed in {filterStats.time}s, displaying {filterStats.amount} assets`
-												else ""
+											if filterStats then
+												return `Processed in {filterStats.time < 0.01 and "<0.01" or math.round(filterStats * 1000)/1000}s, displaying {filterStats.amount} assets`
+											end
+											return ""
 										end),
 										textColor = props.theme.text_muted,
 									},
