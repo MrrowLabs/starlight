@@ -113,6 +113,7 @@ function assetRegistry.addAssetFromInstance(
 			uri = instance.MeshId,
 			textureUri = if instance:IsA("MeshPart") then instance.TextureContent.Uri else instance.TextureId,
 			size = if instance:IsA("MeshPart") then instance.Size.Magnitude else nil,
+			material = if instance:IsA("MeshPart") then instance.Material.Value else nil,
 		})
 	elseif assetType == "audio" then
 		local instance = instance :: types.AudioAssetInstanceTypes
