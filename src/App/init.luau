@@ -626,7 +626,7 @@ local function App(scope: types.AppScope, props: AppProps)
 										text = scope:Computed(function(use)
 											local filterStats = use(filterStats)
 											if filterStats then
-												return `Processed in {filterStats.time < 0.01 and "<0.01" or math.round(filterStats * 1000)/1000}s, displaying {filterStats.amount} assets`
+												return `Processed in {filterStats.time < 0.01 and "<0.01" or filterStats.time < 0.1 and "<0.1" or math.round(filterStats * 1000)/1000}s, displaying {filterStats.amount} assets`
 											end
 											return ""
 										end),
