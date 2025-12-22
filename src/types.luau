@@ -49,6 +49,7 @@ export type MeshAssetProps = {
 	uri: string,
 	textureUri: string?,
 	size: number?,
+	material: number?,
 }
 
 export type MeshAsset = BaseAsset<"mesh", MeshAssetProps>

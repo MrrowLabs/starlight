@@ -97,6 +97,10 @@ local function applyAsset(asset: types.Asset, selection: { Instance })
 		local mesh = AssetService:CreateMeshPartAsync(Content.fromUri(asset.inner.uri))
 		mesh.Name = asset.name
 
+		if asset.inner.material then
+			mesh.Material = (Enum.Material):FromValue(asset.inner.material)
+		end
+
 		if asset.inner.textureUri then
 			mesh.TextureContent = Content.fromUri(asset.inner.textureUri)
 		end
