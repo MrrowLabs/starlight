@@ -121,12 +121,12 @@ local function MeshAssetRender(scope: Fusion.Scope<typeof(Fusion)>, props: MeshA
 		},
 	}
 
-	table.insert(
-		scope,
-		RunService.RenderStepped:Connect(function(delta)
-			rotation:set(peek(rotation) + 45 * delta)
-		end)
-	)
+	-- table.insert(
+	-- 	scope,
+	-- 	RunService.RenderStepped:Connect(function(delta)
+	-- 		rotation:set(peek(rotation) + 45 * delta)
+	-- 	end)
+	-- )
 
 	return scope:New "ViewportFrame" {
 		BackgroundTransparency = 1,
